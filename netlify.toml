@@ -5,4 +5,4 @@
 
 [build.environment]
   NODE_VERSION = "18"
-  VITE_API_URL = "https://beifi-dashboard-api.onrender.com"
+  VITE_API_URL = "https://i-dashboard-api.onrender.com"
