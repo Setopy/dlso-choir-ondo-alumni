@@ -1,7 +1,7 @@
 [build]
   base = "dlso-choir-alumni"
   command = "npm run build"
-  publish = "dlso-choir-alumni/.next"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -12,4 +12,4 @@
   status = 200
 
 [functions]
-  directory = "dlso-choir-alumni/.netlify/functions"
+  directory = ".netlify/functions"
