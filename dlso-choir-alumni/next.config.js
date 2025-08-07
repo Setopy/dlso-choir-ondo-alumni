@@ -16,6 +16,20 @@ const nextConfig = {
       },
     ],
   },
+  // Permissive CSP for OAuth authentication
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self' 'unsafe-eval' 'unsafe-inline' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; frame-src https:; connect-src 'self' https:;"
+          }
+        ],
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
