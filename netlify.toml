@@ -1,1 +1,15 @@
+[build]
+  base = "dlso-choir-alumni"
+  command = "npm run build"
+  publish = "dlso-choir-alumni/.next"
 
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[functions]
+  directory = "dlso-choir-alumni/.netlify/functions"
