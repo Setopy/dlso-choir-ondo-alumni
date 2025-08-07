@@ -6,3 +6,9 @@
 
 [build.environment]
   NODE_VERSION = "18"
+
+# More permissive CSP for OAuth
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self' 'unsafe-eval' 'unsafe-inline' https:; frame-src https:;"
