@@ -1,7 +1,6 @@
 [build]
-  base = "dlso-choir-alumni"  
   command = "npm run build"
-  publish = "dlso-choir-alumni/.next"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -11,7 +10,7 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
-[[redirects]]  
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
