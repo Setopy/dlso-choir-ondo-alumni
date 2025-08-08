@@ -22,7 +22,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { title, description, year, occasion } = body
+    const { title, description, year, occasion, imageUrl } = body
 
     // Validate required fields
     if (!title || !description) {
@@ -39,8 +39,9 @@ export async function POST(request: NextRequest) {
       description,
       year: year || '',
       occasion: occasion || '',
-      imageUrl: '', // We'll handle image upload later
-      authorName: 'Anonymous', // TODO: Get from session when auth is added
+      imageUrl: imageUrl || '', // Now properly handles uploaded image URL
+      authorName: 'Anonymous', // TODO: Get from session when auth is 
+added
       authorEmail: '', // TODO: Get from session when auth is added
       likes: 0,
       likedBy: [],
@@ -55,7 +56,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       id: result.insertedId,
-      message: 'Memory shared successfully!'
+      message: 'Memory shared successfully!',
+      imageUrl: imageUrl // Return the image URL for confirmation
     })
   } catch (error) {
     console.error('Error creating memory:', error)
