@@ -14,6 +14,12 @@ const nextConfig = {
         port: '',
         pathname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com', // ✅ ADDED: Cloudinary domain
+        port: '',
+        pathname: '**',
+      },
     ],
   },
   // Permissive CSP for OAuth authentication
