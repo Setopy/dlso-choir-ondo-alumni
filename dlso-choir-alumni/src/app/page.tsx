@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import AuthButton from '@/components/AuthButton'
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-blue-50 to-amber-50">
@@ -36,12 +37,14 @@ export default function Home() {
             that began in Ondo Region.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-amber-600 text-white px-8 py-3 rounded-lg hover:bg-amber-700 transition-colors font-semibold">
+            {/* FIXED: Added Link wrapper */}
+            <Link href="/memories/new" className="bg-amber-600 text-white px-8 py-3 rounded-lg hover:bg-amber-700 transition-colors font-semibold block text-center">
               Share a Memory
-            </button>
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+            </Link>
+            {/* FIXED: Added Link wrapper */}
+            <Link href="/alumni" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold block text-center">
               Browse Alumni
-            </button>
+            </Link>
             <Link href="/prayers" className="border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:border-gray-400 transition-colors font-semibold block text-center">
               Prayer Requests
             </Link>
