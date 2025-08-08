@@ -6,15 +6,16 @@ if (!process.env.MONGODB_URI) {
 
 const uri = process.env.MONGODB_URI
 
-// Properly typed MongoDB options for Netlify/serverless
+// Ultra-robust options for Netlify Functions
 const options: MongoClientOptions = {
-  maxPoolSize: 10,
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-  connectTimeoutMS: 10000,
-  maxIdleTimeMS: 30000,
+  maxPoolSize: 5, // Reduced for serverless
+  serverSelectionTimeoutMS: 3000, // Very fast selection
+  socketTimeoutMS: 20000, // Shorter socket timeout
+  connectTimeoutMS: 5000, // Quick connection
+  maxIdleTimeMS: 10000, // Close idle connections quickly
   retryWrites: true,
-  // Remove incompatible options for better compatibility
+  // Force IPv4 for better Netlify compatibility
+  family: 4,
 }
 
 let client: MongoClient
@@ -25,27 +26,32 @@ declare global {
 }
 
 if (process.env.NODE_ENV === 'development') {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
   if (!global._mongoClientPromise) {
     client = new MongoClient(uri, options)
     global._mongoClientPromise = client.connect()
   }
   clientPromise = global._mongoClientPromise
 } else {
-  // In production mode, it's best to not use a global variable.
+  // In production, create new connection each time for reliability
   client = new MongoClient(uri, options)
   clientPromise = client.connect()
 }
 
 export async function connectToDatabase(): Promise<{ client: MongoClient; db: Db }> {
   try {
-    const client = await clientPromise
+    // Add timeout to the connection attempt itself
+    const client = await Promise.race([
+      clientPromise,
+      new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Connection timeout')), 8000)
+      )
+    ])
+    
     const db = client.db('dlso-choir-alumni')
     return { client, db }
   } catch (error) {
-    console.error('MongoDB connection error:', error)
-    throw error
+    console.error('MongoDB connection failed:', error)
+    throw new Error('Database connection failed')
   }
 }
 
