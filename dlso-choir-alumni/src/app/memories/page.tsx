@@ -29,8 +29,7 @@ export default function MemoryWallPage() {
   const [memories, setMemories] = useState<Memory[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [imageLoadErrors, setImageLoadErrors] = useState<Set<string>>(new 
-Set())
+  const [imageLoadErrors, setImageLoadErrors] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     fetchMemories()
@@ -68,11 +67,9 @@ Set())
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 
-via-blue-50 to-amber-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-blue-50 to-amber-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-amber-600 
-border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-amber-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600">Loading memories...</p>
         </div>
       </div>
@@ -80,34 +77,27 @@ border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 
-via-blue-50 to-amber-50">
-      {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-blue-50 to-amber-50">
       <header className="bg-white shadow-sm border-b-2 border-amber-200">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link href="/" className="w-12 h-12 bg-gradient-to-br 
-from-amber-500 to-blue-600 rounded-full flex items-center justify-center">
+              <Link href="/" className="w-12 h-12 bg-gradient-to-br from-amber-500 to-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-xl">🎵</span>
               </Link>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Memory 
-Wall</h1>
-                <p className="text-gray-600">Cherished moments from our 
-choir family</p>
+                <h1 className="text-2xl font-bold text-gray-800">Memory Wall</h1>
+                <p className="text-gray-600">Cherished moments from our choir family</p>
               </div>
             </div>
             <div className="flex gap-4">
               <Link 
                 href="/memories/new" 
-                className="bg-amber-600 text-white px-6 py-2 rounded-lg 
-hover:bg-amber-700 transition-colors font-semibold"
+                className="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700 transition-colors font-semibold"
               >
                 + Share Memory
               </Link>
-              <Link href="/" className="text-gray-600 
-hover:text-gray-800">
+              <Link href="/" className="text-gray-600 hover:text-gray-800">
                 ← Back to Home
               </Link>
             </div>
@@ -115,40 +105,31 @@ hover:text-gray-800">
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-12">
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 
-mb-8">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
             <p className="text-red-600">{error}</p>
           </div>
         )}
 
         {memories.length === 0 && !loading && !error ? (
-          /* Empty State */
           <div className="text-center py-16">
-            <div className="w-24 h-24 bg-amber-100 rounded-full flex 
-items-center justify-center mx-auto mb-6">
+            <div className="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-4xl">📸</span>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">No 
-memories shared yet</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">No memories shared yet</h2>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              Be the first to share a special moment from our choir 
-family! 
-              Your memories help preserve our musical and spiritual 
-legacy.
+              Be the first to share a special moment from our choir family! 
+              Your memories help preserve our musical and spiritual legacy.
             </p>
             <Link 
               href="/memories/new"
-              className="bg-amber-600 text-white px-8 py-3 rounded-lg 
-hover:bg-amber-700 transition-colors font-semibold"
+              className="bg-amber-600 text-white px-8 py-3 rounded-lg hover:bg-amber-700 transition-colors font-semibold"
             >
               Share Your First Memory
             </Link>
           </div>
         ) : (
-          /* Memory Grid */
           <div>
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-3xl font-bold text-gray-800">
@@ -163,60 +144,47 @@ hover:bg-amber-700 transition-colors font-semibold"
               {memories.map((memory) => (
                 <div 
                   key={memory._id} 
-                  className="bg-white rounded-xl shadow-lg overflow-hidden 
-hover:shadow-xl transition-shadow"
+                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
                 >
-                  {/* Enhanced Memory Image */}
-                  <div className="relative h-48 bg-gradient-to-br 
-from-amber-100 to-blue-100">
-                    {memory.imageUrl && !imageLoadErrors.has(memory._id) ? 
-(
+                  <div className="relative h-48 bg-gradient-to-br from-amber-100 to-blue-100">
+                    {memory.imageUrl && !imageLoadErrors.has(memory._id) ? (
                       <Image
                         src={memory.imageUrl}
                         alt={memory.title}
                         fill
                         className="object-cover"
                         onError={() => handleImageError(memory._id)}
-                        sizes="(max-width: 768px) 100vw, (max-width: 
-1200px) 50vw, 33vw"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         priority={false}
                       />
                     ) : (
-                      <div className="flex items-center justify-center 
-h-full text-center text-gray-500">
+                      <div className="flex items-center justify-center h-full text-center text-gray-500">
                         <div>
                           <span className="text-4xl mb-2 block">🎵</span>
                           <p className="text-sm">
-                            {memory.imageUrl ? 'Image unavailable' : 'No 
-photo'}
+                            {memory.imageUrl ? 'Image unavailable' : 'No photo'}
                           </p>
                         </div>
                       </div>
                     )}
                     
-                    {/* Image Overlay with Occasion */}
                     {memory.occasion && (
                       <div className="absolute top-2 right-2">
-                        <span className="bg-black bg-opacity-50 text-white 
-px-2 py-1 rounded text-xs">
+                        <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
                           {memory.occasion}
                         </span>
                       </div>
                     )}
                   </div>
 
-                  {/* Memory Content */}
                   <div className="p-6">
-                    <div className="flex items-start justify-between 
-mb-3">
-                      <h3 className="text-xl font-semibold text-gray-800 
-line-clamp-2 flex-1">
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-xl font-semibold text-gray-800 line-clamp-2 flex-1">
                         {memory.title}
                       </h3>
                       {memory.year && (
                         <div className="text-right ml-4">
-                          <span className="text-sm font-medium 
-text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                          <span className="text-sm font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded">
                             {memory.year}
                           </span>
                         </div>
@@ -227,12 +195,9 @@ text-amber-600 bg-amber-50 px-2 py-1 rounded">
                       {memory.description}
                     </p>
 
-                    {/* Memory Metadata */}
-                    <div className="flex items-center justify-between 
-text-sm text-gray-500 border-t pt-4">
+                    <div className="flex items-center justify-between text-sm text-gray-500 border-t pt-4">
                       <div className="flex items-center space-x-4">
-                        <button className="flex items-center space-x-1 
-hover:text-red-500 transition-colors">
+                        <button className="flex items-center space-x-1 hover:text-red-500 transition-colors">
                           <span>❤️</span>
                           <span>{memory.likes}</span>
                         </button>
@@ -241,8 +206,7 @@ hover:text-red-500 transition-colors">
                           <span>{memory.comments?.length || 0}</span>
                         </span>
                         {memory.imageUrl && (
-                          <span className="flex items-center space-x-1 
-text-green-600">
+                          <span className="flex items-center space-x-1 text-green-600">
                             <span>📸</span>
                             <span className="text-xs">Photo</span>
                           </span>
@@ -250,8 +214,7 @@ text-green-600">
                       </div>
                       <div className="text-right">
                         <p className="font-medium">{memory.authorName}</p>
-                        <p 
-className="text-xs">{formatDate(memory.createdAt)}</p>
+                        <p className="text-xs">{formatDate(memory.createdAt)}</p>
                       </div>
                     </div>
                   </div>
@@ -261,23 +224,19 @@ className="text-xs">{formatDate(memory.createdAt)}</p>
           </div>
         )}
 
-        {/* Call to Action */}
         {memories.length > 0 && (
           <div className="mt-16 text-center">
-            <div className="bg-gradient-to-r from-amber-50 to-blue-50 
-rounded-xl p-8">
+            <div className="bg-gradient-to-r from-amber-50 to-blue-50 rounded-xl p-8">
               <h3 className="text-2xl font-semibold text-gray-800 mb-4">
                 Share Your Choir Memories! 🎵
               </h3>
               <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                Help us build the most complete collection of DLSO Youth 
-Choir memories. 
+                Help us build the most complete collection of DLSO Youth Choir memories. 
                 Every photo and story adds to our shared legacy.
               </p>
               <Link 
                 href="/memories/new"
-                className="bg-amber-600 text-white px-8 py-3 rounded-lg 
-hover:bg-amber-700 transition-colors font-semibold inline-block"
+                className="bg-amber-600 text-white px-8 py-3 rounded-lg hover:bg-amber-700 transition-colors font-semibold inline-block"
               >
                 Add Your Memory
               </Link>

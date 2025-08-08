@@ -39,10 +39,9 @@ export async function POST(request: NextRequest) {
       description,
       year: year || '',
       occasion: occasion || '',
-      imageUrl: imageUrl || '', // Now properly handles uploaded image URL
-      authorName: 'Anonymous', // TODO: Get from session when auth is 
-added
-      authorEmail: '', // TODO: Get from session when auth is added
+      imageUrl: imageUrl || '',
+      authorName: 'Anonymous',
+      authorEmail: '',
       likes: 0,
       likedBy: [],
       comments: [],
@@ -57,7 +56,7 @@ added
       success: true,
       id: result.insertedId,
       message: 'Memory shared successfully!',
-      imageUrl: imageUrl // Return the image URL for confirmation
+      imageUrl: imageUrl
     })
   } catch (error) {
     console.error('Error creating memory:', error)
