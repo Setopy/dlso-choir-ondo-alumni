@@ -66,7 +66,7 @@ export default function ShareMemoryPage() {
     const formData = new FormData()
     formData.append('file', file)
     formData.append('upload_preset', 'choir_memories')
-    formData.append('cloud_name', process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || '')
+    
 
     try {
       const response = await fetch(
