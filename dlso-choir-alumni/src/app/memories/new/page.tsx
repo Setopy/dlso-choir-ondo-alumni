@@ -74,8 +74,7 @@ HTMLTextAreaElement | HTMLSelectElement>) => {
 
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('upload_preset', 'choir_memories') // ✅ FIXED: Capital C, 
-space
+    formData.append('upload_preset', 'choir_memories') 
 
     const uploadUrl = 
 `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
