@@ -110,18 +110,21 @@ export default function RecentActivity() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-        <h3 className="text-2xl font-semibold text-gray-800 mb-6">Recent Activity</h3>
-        <div className="space-y-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg animate-pulse">
-              <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-              <div className="flex-1">
-                <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+      <div className="relative bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-10 mb-20 border border-slate-200/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-slate-50/50 rounded-2xl"></div>
+        <div className="relative">
+          <h3 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-8">Recent Activity</h3>
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex items-center space-x-4 p-4 bg-slate-50/50 rounded-xl animate-pulse">
+                <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -129,71 +132,77 @@ export default function RecentActivity() {
 
   if (activities.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-        <h3 className="text-2xl font-semibold text-gray-800 mb-6">Recent Activity</h3>
-        <div className="text-center py-8">
-          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">🎵</span>
+      <div className="relative bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-10 mb-20 border border-slate-200/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-slate-50/50 rounded-2xl"></div>
+        <div className="relative">
+          <h3 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-8">Recent Activity</h3>
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">🎵</span>
+            </div>
+            <p className="text-slate-600 mb-4">No recent activity yet</p>
+            <p className="text-sm text-slate-500">
+              Share the first memory to get the community started!
+            </p>
           </div>
-          <p className="text-gray-600 mb-4">No recent activity yet</p>
-          <p className="text-sm text-gray-500">
-            Share the first memory to get the community started!
-          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-      <h3 className="text-2xl font-semibold text-gray-800 mb-6">Recent Activity</h3>
-      <div className="space-y-4">
-        {activities.map((activity) => (
-          <div key={activity.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-            <div className="flex items-center space-x-3">
-              {/* Activity Icon */}
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${getActivityColor(activity.type)}`}>
-                {getActivityIcon(activity.type)}
+    <div className="relative bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-10 mb-20 border border-slate-200/50">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-slate-50/50 rounded-2xl"></div>
+      <div className="relative">
+        <h3 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-8">Recent Activity</h3>
+        <div className="space-y-4">
+          {activities.map((activity) => (
+            <div key={activity.id} className="flex items-center space-x-4 p-4 bg-slate-50/50 rounded-xl hover:bg-slate-100/50 transition-colors border border-slate-200/30">
+              <div className="flex items-center space-x-3">
+                {/* Activity Icon */}
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${getActivityColor(activity.type)}`}>
+                  {getActivityIcon(activity.type)}
+                </div>
+                
+                {/* User Avatar */}
+                {activity.authorImage ? (
+                  <Image
+                    src={activity.authorImage}
+                    alt={activity.authorName}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-blue-500 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold text-sm">
+                      {getInitials(activity.authorName)}
+                    </span>
+                  </div>
+                )}
               </div>
               
-              {/* User Avatar */}
-              {activity.authorImage ? (
-                <Image
-                  src={activity.authorImage}
-                  alt={activity.authorName}
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-sm">
-                    {getInitials(activity.authorName)}
-                  </span>
-                </div>
-              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-slate-800 truncate">
+                  <span className="font-medium">{activity.authorName}</span> {activity.action}
+                  {activity.title && (
+                    <span className="text-purple-600 font-medium"> &ldquo;{activity.title}&rdquo;</span>
+                  )}
+                </p>
+                <p className="text-sm text-slate-500">{formatTimeAgo(activity.timestamp)}</p>
+              </div>
             </div>
-            
-            <div className="flex-1 min-w-0">
-              <p className="text-gray-800 truncate">
-                <span className="font-medium">{activity.authorName}</span> {activity.action}
-                {activity.title && (
-                  <span className="text-blue-600 font-medium"> &ldquo;{activity.title}&rdquo;</span>
-                )}
-              </p>
-              <p className="text-sm text-gray-500">{formatTimeAgo(activity.timestamp)}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      {activities.length > 0 && (
-        <div className="text-center mt-6">
-          <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">
-            View All Activity →
-          </button>
+          ))}
         </div>
-      )}
+        
+        {activities.length > 0 && (
+          <div className="text-center mt-6">
+            <button className="text-purple-600 hover:text-purple-700 font-semibold text-sm transition-colors">
+              View All Activity →
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

@@ -67,7 +67,7 @@ export default function DynamicStats() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
+      <div className="relative bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-10 mb-20 border border-slate-200/50">
         <div className="grid md:grid-cols-4 gap-8 text-center">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="animate-pulse">
@@ -81,42 +81,47 @@ export default function DynamicStats() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-      <h3 className="text-2xl font-semibold text-gray-800 mb-8 text-center">Our Impact</h3>
-      <div className="grid md:grid-cols-4 gap-8 text-center">
-        <div>
-          <div className="text-3xl font-bold text-amber-600 mb-2">
-            {stats.totalUsers}+
+    <div className="relative bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-10 mb-20 border border-slate-200/50">
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-purple-50/30 rounded-2xl"></div>
+      <div className="relative">
+        <h3 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-10 text-center">
+          Our Impact
+        </h3>
+        <div className="grid md:grid-cols-4 gap-8 text-center">
+          <div className="group">
+            <div className="text-4xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform duration-300">
+              {stats.totalUsers}+
+            </div>
+            <div className="text-slate-600 font-medium">Alumni Members</div>
           </div>
-          <div className="text-gray-600">Alumni Members</div>
-        </div>
-        <div>
-          <div className="text-3xl font-bold text-blue-600 mb-2">
-            {stats.yearsActive}+
+          <div className="group">
+            <div className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform duration-300">
+              {stats.yearsActive}+
+            </div>
+            <div className="text-slate-600 font-medium">Years of Ministry</div>
           </div>
-          <div className="text-gray-600">Years of Ministry</div>
-        </div>
-        <div>
-          <div className="text-3xl font-bold text-green-600 mb-2">
-            {stats.totalMemories}+
+          <div className="group">
+            <div className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform duration-300">
+              {stats.totalMemories}+
+            </div>
+            <div className="text-slate-600 font-medium">Shared Memories</div>
           </div>
-          <div className="text-gray-600">Shared Memories</div>
-        </div>
-        <div>
-          <div className="text-3xl font-bold text-purple-600 mb-2">
-            {stats.totalLikes}+
+          <div className="group">
+            <div className="text-4xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform duration-300">
+              {stats.totalLikes}+
+            </div>
+            <div className="text-slate-600 font-medium">Memories Loved</div>
           </div>
-          <div className="text-gray-600">Memories Loved</div>
         </div>
+        
+        {stats.totalMemories === 0 && (
+          <div className="text-center mt-8 p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200/50">
+            <p className="text-amber-800 font-medium">
+              🎵 Start sharing memories to see our community grow!
+            </p>
+          </div>
+        )}
       </div>
-      
-      {stats.totalMemories === 0 && (
-        <div className="text-center mt-6 p-4 bg-amber-50 rounded-lg">
-          <p className="text-amber-800">
-            🎵 Start sharing memories to see our community grow!
-          </p>
-        </div>
-      )}
     </div>
   )
 }
