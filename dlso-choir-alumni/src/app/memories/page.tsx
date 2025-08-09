@@ -146,13 +146,13 @@ export default function MemoryWallPage() {
                   key={memory._id} 
                   className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
                 >
-                  <div className="relative h-48 bg-gradient-to-br from-amber-100 to-blue-100">
+                  <div className="relative aspect-[4/3] bg-gradient-to-br from-amber-100 to-blue-100">
                     {memory.imageUrl && !imageLoadErrors.has(memory._id) ? (
                       <Image
                         src={memory.imageUrl}
                         alt={memory.title}
                         fill
-                        className="object-cover"
+                        className="object-cover object-top"
                         onError={() => handleImageError(memory._id)}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         priority={false}
