@@ -1,30 +1,67 @@
-import NextAuth from 'next-auth'
+// src/app/api/auth/[...nextauth]/route.ts
+import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
 import clientPromise from '@/lib/mongodb'
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
   ],
   callbacks: {
     async session({ session, user }) {
       // Add user ID to session
       if (session.user) {
-        // @ts-except-error - Temporary to avoid typing complexity
-        session.user.id = user.id
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (session.user as any).id = user.id
       }
       return session
     },
+    async jwt({ token, user }) {
+      // Add user ID to JWT token
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    },
+    async redirect({ url, baseUrl }) {
+      // Redirect to home page after sign in
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    }
   },
   session: {
     strategy: 'database',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
+  pages: {
+    signIn: '/auth/signin',
+    error: '/auth/error',
+  },
+  events: {
+    async signIn({ user }) {
+      console.log('User signed in:', user.email)
+    },
+    async signOut() {
+      console.log('User signed out')
+    }
+  },
+  debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET,
-})
+}
 
+const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST }

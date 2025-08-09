@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { connectToDatabase } from '@/lib/mongodb'
 
 export async function GET() {
@@ -21,6 +23,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // ✅ GET SESSION WITH YOUR AUTH CONFIG
+    const session = await getServerSession(authOptions)
+    console.log('Session data:', session) // Debug log
+    console.log('User info:', session?.user) // Debug user details
+    
     const body = await request.json()
     const { title, description, year, occasion, imageUrl } = body
 
@@ -42,8 +49,11 @@ export async function POST(request: NextRequest) {
         year: year || '',
         occasion: occasion || '',
         imageUrl: imageUrl || '',
-        authorName: 'Anonymous',
-        authorEmail: '',
+        // ✅ USE REAL USER INFO FROM YOUR SESSION
+        authorName: session?.user?.name || 'Anonymous',
+        authorEmail: session?.user?.email || '',
+        authorImage: session?.user?.image || '',
+        authorId: session?.user?.id || session?.user?.email || '', // Use your custom ID
         likes: 0,
         likedBy: [],
         comments: [],
@@ -51,6 +61,9 @@ export async function POST(request: NextRequest) {
         createdAt: new Date(),
         updatedAt: new Date()
       }
+      
+      console.log('Creating memory with author:', newMemory.authorName) // Debug log
+      console.log('Session exists:', !!session) // Debug session existence
       
       const result = await db.collection('memories').insertOne(newMemory)
       return result
@@ -68,7 +81,13 @@ export async function POST(request: NextRequest) {
       success: true,
       id: result.insertedId,
       message: 'Memory shared successfully!',
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+      authorName: session?.user?.name || 'Anonymous', // Return author info for confirmation
+      debug: {
+        sessionExists: !!session,
+        userName: session?.user?.name,
+        userEmail: session?.user?.email
+      }
     })
 
   } catch (error) {
