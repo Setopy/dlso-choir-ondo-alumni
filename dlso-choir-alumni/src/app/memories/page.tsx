@@ -146,7 +146,7 @@ export default function MemoryWallPage() {
                   key={memory._id} 
                   className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
                 >
-                  <div className="relative aspect-[3/4] bg-gradient-to-br from-amber-100 to-blue-100">
+                  <div className="relative aspect-[5/4] bg-gradient-to-br from-amber-100 to-blue-100">
                     {memory.imageUrl && !imageLoadErrors.has(memory._id) ? (
                       <Image
                         src={memory.imageUrl}
