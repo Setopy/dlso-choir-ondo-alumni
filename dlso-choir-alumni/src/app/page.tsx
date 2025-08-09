@@ -15,11 +15,11 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-14 h-14 bg-gradient-to-br from-purple-800 via-amber-700 to-orange-700 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-xl">🎵</span>
+                <span className="text-white font-bold text-xl">✨</span>
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent">
-                  DLSO Youth Choir Alumni
+                  Ondo DLSO Alumni
                 </h1>
                 <p className="text-slate-600 font-medium">Ondo Region & Beyond</p>
               </div>
@@ -42,8 +42,8 @@ export default function Home() {
               </span>
             </h2>
             <p className="text-xl text-slate-200 max-w-3xl mx-auto mb-10 leading-relaxed">
-              Welcome to the official alumni platform for DLSO Youth Choir members. 
-              Share memories, connect with fellow choir members, and continue the fellowship 
+              Welcome to the official alumni platform for Ondo DLSO members. 
+              Share memories, connect with fellow alumni, and continue the fellowship 
               that began in Ondo Region.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -73,8 +73,8 @@ export default function Home() {
             </div>
             <h3 className="text-2xl font-bold text-slate-800 mb-4">Memory Wall</h3>
             <p className="text-slate-600 leading-relaxed">
-              Share photos, videos, and stories from your choir years. 
-              Relive the beautiful moments and performances together.
+              Share photos, videos, and stories from your DLSO years. 
+              Relive the beautiful moments and ministry experiences together.
             </p>
           </div>
 
@@ -93,10 +93,10 @@ export default function Home() {
             <div className="w-20 h-20 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
               <span className="text-3xl">🎶</span>
             </div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-4">Choir Archives</h3>
+            <h3 className="text-2xl font-bold text-slate-800 mb-4">Ministry Archives</h3>
             <p className="text-slate-600 leading-relaxed">
               Listen to recordings of our performances, access sheet music, 
-              and celebrate the musical legacy we created together.
+              and celebrate the ministry legacy we created together.
             </p>
           </div>
         </div>
@@ -116,11 +116,11 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-12">
             <div>
               <h4 className="text-xl font-bold mb-6 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                DLSO Youth Choir Alumni
+                Ondo DLSO Alumni
               </h4>
               <p className="text-slate-300 leading-relaxed">
-                Connecting alumni from Deeper Life South-West Ondo Region Youth Choir, 
-                preserving our musical and spiritual heritage for generations.
+                Connecting alumni from Deeper Life Student Outreach Ondo Region, 
+                preserving our ministry and spiritual heritage for generations.
               </p>
             </div>
             <div>
@@ -128,7 +128,7 @@ export default function Home() {
               <ul className="space-y-3 text-slate-300">
                 <li><a href="#" className="hover:text-amber-400 transition-colors">Alumni Directory</a></li>
                 <li><a href="#" className="hover:text-amber-400 transition-colors">Prayer Requests</a></li>
-                <li><a href="#" className="hover:text-amber-400 transition-colors">Choir Archives</a></li>
+                <li><a href="#" className="hover:text-amber-400 transition-colors">Ministry Archives</a></li>
                 <li><a href="#" className="hover:text-amber-400 transition-colors">Events</a></li>
               </ul>
             </div>
@@ -144,7 +144,7 @@ export default function Home() {
           </div>
           <div className="border-t border-slate-700 mt-12 pt-8 text-center">
             <p className="text-slate-400">
-              &copy; 2025 DLSO Youth Choir Alumni. Built with love for our choir family.
+              &copy; 2025 Ondo DLSO Alumni. Built with love for our DLSO family.
             </p>
           </div>
         </div>

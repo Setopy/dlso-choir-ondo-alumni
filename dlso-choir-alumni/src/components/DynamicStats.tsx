@@ -44,7 +44,7 @@ export default function DynamicStats() {
           const uniqueUsers = new Set(memories.map((memory: Memory) => memory.authorEmail || memory.authorId))
           const totalUsers = uniqueUsers.size
           
-          // Calculate years active (from 2005 when DLSO Youth Choir started)
+          // Calculate years active (from 2005 when DLSO Ondo Region started)
           const currentYear = new Date().getFullYear()
           const yearsActive = currentYear - 2005
           
@@ -117,7 +117,7 @@ export default function DynamicStats() {
         {stats.totalMemories === 0 && (
           <div className="text-center mt-8 p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200/50">
             <p className="text-amber-800 font-medium">
-              🎵 Start sharing memories to see our community grow!
+              ✨ Start sharing memories to see our community grow!
             </p>
           </div>
         )}

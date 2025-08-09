@@ -83,11 +83,11 @@ export default function MemoryWallPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link href="/" className="w-12 h-12 bg-gradient-to-br from-amber-500 to-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">🎵</span>
+                <span className="text-white font-bold text-xl">✨</span>
               </Link>
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">Memory Wall</h1>
-                <p className="text-gray-600">Cherished moments from our choir family</p>
+                <p className="text-gray-600">Cherished moments from our DLSO family</p>
               </div>
             </div>
             <div className="flex gap-4">
@@ -119,8 +119,8 @@ export default function MemoryWallPage() {
             </div>
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">No memories shared yet</h2>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              Be the first to share a special moment from our choir family! 
-              Your memories help preserve our musical and spiritual legacy.
+              Be the first to share a special moment from our DLSO family! 
+              Your memories help preserve our ministry and spiritual legacy.
             </p>
             <Link 
               href="/memories/new"
@@ -133,7 +133,7 @@ export default function MemoryWallPage() {
           <div>
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-3xl font-bold text-gray-800">
-                Our Choir Memories ({memories.length})
+                Our DLSO Memories ({memories.length})
               </h2>
               <div className="text-sm text-gray-500">
                 Latest memories first
@@ -160,7 +160,7 @@ export default function MemoryWallPage() {
                     ) : (
                       <div className="flex items-center justify-center h-full text-center text-gray-500">
                         <div>
-                          <span className="text-4xl mb-2 block">🎵</span>
+                          <span className="text-4xl mb-2 block">📸</span>
                           <p className="text-sm">
                             {memory.imageUrl ? 'Image unavailable' : 'No photo'}
                           </p>
@@ -228,10 +228,10 @@ export default function MemoryWallPage() {
           <div className="mt-16 text-center">
             <div className="bg-gradient-to-r from-amber-50 to-blue-50 rounded-xl p-8">
               <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-                Share Your Choir Memories! 🎵
+                Share Your DLSO Memories! ✨
               </h3>
               <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                Help us build the most complete collection of DLSO Youth Choir memories. 
+                Help us build the most complete collection of Ondo DLSO Alumni memories. 
                 Every photo and story adds to our shared legacy.
               </p>
               <Link 

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DLSO Youth Choir Alumni",
-  description: "Connecting DLSO Youth Choir Alumni across Ondo Region and beyond",
+  title: "Ondo DLSO Alumni",
+  description: "Connecting Ondo DLSO Alumni across regions and beyond - choir members, ushers, prayer warriors, and all ministry sections",
 };
 
 export default function RootLayout({

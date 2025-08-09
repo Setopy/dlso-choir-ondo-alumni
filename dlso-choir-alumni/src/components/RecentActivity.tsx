@@ -95,7 +95,7 @@ export default function RecentActivity() {
       case 'memory': return '📸'
       case 'like': return '❤️'
       case 'comment': return '💬'
-      default: return '🎵'
+      default: return '✨'
     }
   }
 
@@ -138,7 +138,7 @@ export default function RecentActivity() {
           <h3 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-8">Recent Activity</h3>
           <div className="text-center py-8">
             <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🎵</span>
+              <span className="text-2xl">✨</span>
             </div>
             <p className="text-slate-600 mb-4">No recent activity yet</p>
             <p className="text-sm text-slate-500">

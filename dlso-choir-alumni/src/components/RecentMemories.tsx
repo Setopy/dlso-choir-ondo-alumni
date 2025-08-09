@@ -95,7 +95,7 @@ export default function RecentMemories() {
           <div className="text-center">
             <h2 className="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-6">Memory Wall</h2>
             <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-              No memories shared yet. Be the first to share a special moment from our choir family!
+              No memories shared yet. Be the first to share a special moment from our DLSO family!
             </p>
             <Link 
               href="/memories/new"
@@ -118,7 +118,7 @@ export default function RecentMemories() {
             Latest Shared Memories
           </h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Relive the beautiful moments and performances from our choir journey together
+            Relive the beautiful moments and ministry experiences from our DLSO journey together
           </p>
         </div>
 
@@ -141,7 +141,7 @@ export default function RecentMemories() {
                 ) : (
                   <div className="flex items-center justify-center h-full text-center text-gray-500">
                     <div>
-                      <span className="text-4xl mb-2 block">🎵</span>
+                      <span className="text-4xl mb-2 block">📸</span>
                       <p className="text-sm">
                         {memory.imageUrl ? 'Image unavailable' : 'No photo'}
                       </p>
@@ -210,11 +210,11 @@ export default function RecentMemories() {
         {/* Premium CTA Section */}
         <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-amber-900 rounded-2xl p-10 text-center shadow-2xl">
           <h3 className="text-3xl font-bold text-white mb-6">
-            Explore All Our Memories 🎵
+            Explore All Our Memories ✨
           </h3>
           <p className="text-xl text-slate-200 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Discover the complete collection of DLSO Youth Choir memories, stories, and performances
-            that have shaped our musical and spiritual journey together.
+            Discover the complete collection of Ondo DLSO Alumni memories, stories, and ministry experiences
+            that have shaped our spiritual journey together.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
