@@ -1,5 +1,8 @@
 import Link from 'next/link'
 import AuthButton from '@/components/AuthButton'
+import RecentMemories from '@/components/RecentMemories'
+import DynamicStats from '@/components/DynamicStats'
+import RecentActivity from '@/components/RecentActivity'
 
 export default function Home() {
   return (
@@ -37,11 +40,9 @@ export default function Home() {
             that began in Ondo Region.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {/* FIXED: Added Link wrapper */}
             <Link href="/memories/new" className="bg-amber-600 text-white px-8 py-3 rounded-lg hover:bg-amber-700 transition-colors font-semibold block text-center">
               Share a Memory
             </Link>
-            {/* FIXED: Added Link wrapper */}
             <Link href="/alumni" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold block text-center">
               Browse Alumni
             </Link>
@@ -87,70 +88,15 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Stats Section */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-bold text-amber-600 mb-2">150+</div>
-              <div className="text-gray-600">Alumni Members</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">20+</div>
-              <div className="text-gray-600">Years of Ministry</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-green-600 mb-2">500+</div>
-              <div className="text-gray-600">Shared Memories</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-purple-600 mb-2">50+</div>
-              <div className="text-gray-600">Churches Reached</div>
-            </div>
-          </div>
-        </div>
+        {/* ✅ Dynamic Stats Section */}
+        <DynamicStats />
 
-        {/* Recent Activity Preview */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-6">Recent Activity</h3>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-amber-200 rounded-full flex items-center justify-center">
-                <span className="text-sm font-semibold">SA</span>
-              </div>
-              <div className="flex-1">
-                <p className="text-gray-800">Sister Adunni shared a new memory from 2018 Easter performance</p>
-                <p className="text-sm text-gray-500">2 hours ago</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center">
-                <span className="text-sm font-semibold">BT</span>
-              </div>
-              <div className="flex-1">
-                <p className="text-gray-800">Brother Tunde requested prayers for new ministry launch</p>
-                <p className="text-sm text-gray-500">5 hours ago</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center">
-                <span className="text-sm font-semibold">MO</span>
-              </div>
-              <div className="flex-1">
-                <p className="text-gray-800">Minister Olumide uploaded audio from 2020 Christmas concert</p>
-                <p className="text-sm text-gray-500">1 day ago</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="text-center mt-8">
-            <button className="text-blue-600 hover:text-blue-700 font-semibold">
-              View All Activity →
-            </button>
-          </div>
-        </div>
+        {/* ✅ Dynamic Recent Activity */}
+        <RecentActivity />
       </main>
+
+      {/* Recent Memories Section */}
+      <RecentMemories />
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12 mt-16">
