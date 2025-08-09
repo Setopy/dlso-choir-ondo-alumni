@@ -74,7 +74,7 @@ HTMLTextAreaElement | HTMLSelectElement>) => {
 
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('upload_preset', 'Choir memories') // ✅ FIXED: Capital C, 
+    formData.append('upload_preset', 'choir_memories') // ✅ FIXED: Capital C, 
 space
 
     const uploadUrl = 
