@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { alumniContacts, getAlumniStats} from '@/data/alumniContacts'
+import { alumniContacts, getAlumniStats } from '@/data/alumniContacts'
 
 interface MemoryFromAPI {
   _id: string
@@ -208,6 +208,8 @@ export default function AlumniPage() {
       case 'Nigeria': return '🇳🇬'
       case 'Norway': return '🇳🇴'
       case 'Canada': return '🇨🇦'
+      case 'South Africa': return '🇿🇦'
+      case 'Mexico': return '🇲🇽'
       default: return '🌍'
     }
   }
