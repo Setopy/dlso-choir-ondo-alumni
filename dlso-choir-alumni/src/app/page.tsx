@@ -1,5 +1,3 @@
-// Updated src/app/page.tsx with EXCO Leadership section
-
 import Link from 'next/link'
 import AuthButton from '@/components/AuthButton'
 import RecentMemories from '@/components/RecentMemories'
@@ -27,10 +25,17 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-4">
               <Link 
-                href="#leadership" 
+                href="/exco" 
                 className="hidden sm:flex items-center space-x-2 text-slate-600 hover:text-purple-600 transition-colors font-medium bg-white/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-slate-200/50 hover:border-purple-200 hover:bg-purple-50/50"
               >
                 <span className="text-lg">👑</span>
+                <span>EXCO</span>
+              </Link>
+              <Link 
+                href="#leadership" 
+                className="hidden sm:flex items-center space-x-2 text-slate-600 hover:text-purple-600 transition-colors font-medium bg-white/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-slate-200/50 hover:border-purple-200 hover:bg-purple-50/50"
+              >
+                <span className="text-lg">🏛️</span>
                 <span>Leadership</span>
               </Link>
               <Link 
@@ -148,7 +153,7 @@ export default function Home() {
               <ul className="space-y-3 text-slate-300">
                 <li><Link href="/alumni" className="hover:text-amber-400 transition-colors">Alumni Directory</Link></li>
                 <li><Link href="/prayers" className="hover:text-amber-400 transition-colors">Prayer Requests</Link></li>
-                <li><Link href="#leadership" className="hover:text-amber-400 transition-colors">EXCO Leadership</Link></li>
+                <li><Link href="/exco" className="hover:text-amber-400 transition-colors">EXCO Leadership</Link></li>
                 <li><Link href="/admin/newsletter" className="hover:text-amber-400 transition-colors">Newsletter Admin</Link></li>
               </ul>
             </div>
