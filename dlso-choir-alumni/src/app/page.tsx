@@ -1,4 +1,4 @@
-// STEP 1: Copy this ENTIRE code and replace your src/app/page.tsx
+// Updated src/app/page.tsx with newsletter link in header
 
 import Link from 'next/link'
 import AuthButton from '@/components/AuthButton'
@@ -24,7 +24,16 @@ export default function Home() {
                 <p className="text-slate-600 font-medium">Ondo Region & Beyond</p>
               </div>
             </div>
-            <AuthButton />
+            <div className="flex items-center space-x-4">
+              <Link 
+                href="/admin/newsletter" 
+                className="hidden sm:flex items-center space-x-2 text-slate-600 hover:text-amber-600 transition-colors font-medium bg-white/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-slate-200/50 hover:border-amber-200 hover:bg-amber-50/50"
+              >
+                <span className="text-lg">📧</span>
+                <span>Newsletter</span>
+              </Link>
+              <AuthButton />
+            </div>
           </div>
         </div>
       </header>
@@ -126,10 +135,10 @@ export default function Home() {
             <div>
               <h4 className="text-xl font-bold mb-6 text-white">Quick Links</h4>
               <ul className="space-y-3 text-slate-300">
-                <li><a href="#" className="hover:text-amber-400 transition-colors">Alumni Directory</a></li>
-                <li><a href="#" className="hover:text-amber-400 transition-colors">Prayer Requests</a></li>
-                <li><a href="#" className="hover:text-amber-400 transition-colors">Ministry Archives</a></li>
-                <li><a href="#" className="hover:text-amber-400 transition-colors">Events</a></li>
+                <li><Link href="/alumni" className="hover:text-amber-400 transition-colors">Alumni Directory</Link></li>
+                <li><Link href="/prayers" className="hover:text-amber-400 transition-colors">Prayer Requests</Link></li>
+                <li><Link href="#" className="hover:text-amber-400 transition-colors">Ministry Archives</Link></li>
+                <li><Link href="/admin/newsletter" className="hover:text-amber-400 transition-colors">Newsletter Admin</Link></li>
               </ul>
             </div>
             <div>
