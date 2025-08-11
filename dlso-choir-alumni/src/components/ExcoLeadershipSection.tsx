@@ -54,7 +54,7 @@ export default function ExcoLeadershipSection() {
       } else {
         setError(data.error || 'Failed to fetch EXCO members')
       }
-    } catch (error) {
+    } catch {
       setError('Error connecting to server')
     } finally {
       setLoading(false)
@@ -125,7 +125,7 @@ export default function ExcoLeadershipSection() {
       } else {
         alert(data.error || 'Upload failed')
       }
-    } catch (error) {
+    } catch {
       alert('Upload failed')
     } finally {
       setUploadingMember(null)
