@@ -36,6 +36,7 @@ export default function ExcoLeadershipSection() {
   const [error, setError] = useState<string | null>(null)
   const [editingMember, setEditingMember] = useState<string | null>(null)
   const [uploadingMember, setUploadingMember] = useState<string | null>(null)
+  const [uploadProgress, setUploadProgress] = useState<number>(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -50,6 +51,10 @@ export default function ExcoLeadershipSection() {
       const data = await response.json()
       
       if (data.success) {
+        console.log('🔍 EXCO Members loaded:')
+        data.members.forEach((member: ExcoMember) => {
+          console.log(`- ${member.name}: ID = "${member.id}" (type: ${typeof member.id})`)
+        })
         setMembers(data.members)
       } else {
         setError(data.error || 'Failed to fetch EXCO members')
@@ -58,6 +63,124 @@ export default function ExcoLeadershipSection() {
       setError('Error connecting to server')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const uploadImageToCloudinary = async (file: File): Promise<string> => {
+    console.log('=== EXCO CLOUDINARY UPLOAD DEBUG ===')
+    console.log('File details:', {
+      name: file.name,
+      size: file.size,
+      type: file.type
+    })
+    console.log('Cloud name:', process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
+
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', 'choir_memories') // Using your existing preset
+
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
+    console.log('Upload URL:', uploadUrl)
+    console.log('Upload preset: choir_memories')
+
+    try {
+      console.log('Starting EXCO photo upload to Cloudinary...')
+      const response = await fetch(uploadUrl, {
+        method: 'POST',
+        body: formData,
+      })
+
+      console.log('Response status:', response.status)
+      console.log('Response ok:', response.ok)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Upload failed - Error response:', errorText)
+        throw new Error(`Upload failed: ${response.status} - ${errorText}`)
+      }
+
+      const data = await response.json()
+      console.log('✅ EXCO UPLOAD SUCCESS!')
+      console.log('Cloudinary response:', data)
+      console.log('📸 EXCO Image URL:', data.secure_url)
+      
+      return data.secure_url
+    } catch (error) {
+      console.error('❌ Cloudinary upload error:', error)
+      throw new Error('Failed to upload EXCO image')
+    }
+  }
+
+  const handlePhotoUpload = async (memberId: string, file: File) => {
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file')
+      return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB')
+      return
+    }
+
+    console.log('🔍 Debug Info:')
+    console.log('memberId:', memberId)
+    console.log('memberId type:', typeof memberId)
+    console.log('memberId length:', memberId?.length)
+    console.log('file:', file.name, file.size)
+
+    // Check if member ID is valid
+    if (!memberId || memberId.trim() === '') {
+      alert('⚠️ Member ID is missing! Please try again.')
+      console.error('❌ Member ID is invalid:', memberId)
+      return
+    }
+
+    setUploadingMember(memberId)
+    setUploadProgress(0)
+
+    try {
+      // Step 1: Upload to Cloudinary (same as memories)
+      setUploadProgress(25)
+      console.log('📤 Uploading to Cloudinary...')
+      const imageUrl = await uploadImageToCloudinary(file)
+      console.log('📸 Cloudinary upload successful:', imageUrl)
+
+      // Step 2: Update database with the Cloudinary URL
+      setUploadProgress(75)
+      console.log('📤 Sending to API:', { memberId, imageUrl })
+      
+      const response = await fetch('/api/upload-exco-photo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          memberId: memberId,
+          imageUrl: imageUrl
+        })
+      })
+      
+      const data = await response.json()
+      console.log('📥 API Response:', data)
+      console.log('Response status:', response.status)
+      
+      if (response.ok && data.success) {
+        setUploadProgress(100)
+        setMembers(prev => prev.map(member => 
+          member.id === memberId ? { ...member, image: imageUrl } : member
+        ))
+        alert('Photo uploaded successfully!')
+      } else {
+        alert(data.error || 'Upload failed')
+        console.error('❌ Upload failed:', data)
+      }
+    } catch (error) {
+      console.error('❌ Upload error:', error)
+      alert('Upload failed: ' + (error instanceof Error ? error.message : 'Unknown error'))
+    } finally {
+      setUploadingMember(null)
+      setEditingMember(null)
+      setUploadProgress(0)
     }
   }
 
@@ -90,47 +213,6 @@ export default function ExcoLeadershipSection() {
     if (role === 'Financial Secretary') return 'bg-purple-500 text-white'
     if (role === 'Prayer & Welfare Secretary') return 'bg-pink-500 text-white'
     return 'bg-gray-500 text-white'
-  }
-
-  const handlePhotoUpload = async (memberId: string, file: File) => {
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file')
-      return
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB')
-      return
-    }
-
-    setUploadingMember(memberId)
-
-    try {
-      const formData = new FormData()
-      formData.append('image', file)
-      formData.append('memberId', memberId)
-
-      const response = await fetch('/api/upload-exco-photo', {
-        method: 'POST',
-        body: formData
-      })
-      
-      const data = await response.json()
-      
-      if (response.ok && data.success) {
-        setMembers(prev => prev.map(member => 
-          member.id === memberId ? { ...member, image: data.imageUrl } : member
-        ))
-        alert('Photo uploaded successfully!')
-      } else {
-        alert(data.error || 'Upload failed')
-      }
-    } catch {
-      alert('Upload failed')
-    } finally {
-      setUploadingMember(null)
-      setEditingMember(null)
-    }
   }
 
   const triggerFileInput = (memberId: string) => {
@@ -176,6 +258,27 @@ export default function ExcoLeadershipSection() {
         <div className="container mx-auto px-4">
           
           <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+
+          {/* Upload Progress Bar */}
+          {uploadingMember && uploadProgress > 0 && (
+            <div className="fixed top-0 left-0 right-0 bg-white border-b z-50">
+              <div className="max-w-6xl mx-auto px-4 py-2">
+                <div className="flex items-center space-x-3">
+                  <span className="text-sm text-gray-600">
+                    {uploadProgress < 50 ? 'Uploading image...' : 
+                     uploadProgress < 100 ? 'Saving photo...' : 'Complete!'}
+                  </span>
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-purple-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm text-gray-600">{uploadProgress}%</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="text-center mb-16">
             <div className="inline-flex items-center space-x-2 bg-yellow-500 rounded-full px-6 py-2 mb-6">
