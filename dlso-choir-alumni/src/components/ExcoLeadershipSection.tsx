@@ -29,6 +29,19 @@ interface ExcoMember {
   ministryFocus: string
 }
 
+// Hierarchical sorting function - Publicity last as requested
+const getPositionHierarchy = (role: string): number => {
+  const hierarchy = {
+    'President': 1,
+    'Vice President': 2,
+    'General Secretary': 3,
+    'Financial Secretary': 4,
+    'Prayer & Welfare Secretary': 5,
+    'Program & Publicity Secretary': 6  // Last as requested
+  }
+  return hierarchy[role as keyof typeof hierarchy] || 99
+}
+
 export default function ExcoLeadershipSection() {
   const [selectedMember, setSelectedMember] = useState<ExcoMember | null>(null)
   const [members, setMembers] = useState<ExcoMember[]>([])
@@ -55,7 +68,18 @@ export default function ExcoLeadershipSection() {
         data.members.forEach((member: ExcoMember) => {
           console.log(`- ${member.name}: ID = "${member.id}" (type: ${typeof member.id})`)
         })
-        setMembers(data.members)
+        
+        // ✅ HIERARCHICAL SORTING - Publicity Secretary will be last
+        const sortedMembers = data.members.sort((a: ExcoMember, b: ExcoMember) => {
+          return getPositionHierarchy(a.role) - getPositionHierarchy(b.role)
+        })
+        
+        console.log('📋 Members sorted by hierarchy:')
+        sortedMembers.forEach((member: ExcoMember, index: number) => {
+          console.log(`${index + 1}. ${member.role} - ${member.name}`)
+        })
+        
+        setMembers(sortedMembers)
       } else {
         setError(data.error || 'Failed to fetch EXCO members')
       }
