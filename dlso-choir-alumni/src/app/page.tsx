@@ -25,20 +25,6 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-4">
               <Link 
-                href="/exco" 
-                className="hidden sm:flex items-center space-x-2 text-slate-600 hover:text-purple-600 transition-colors font-medium bg-white/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-slate-200/50 hover:border-purple-200 hover:bg-purple-50/50"
-              >
-                <span className="text-lg">👑</span>
-                <span>EXCO</span>
-              </Link>
-              <Link 
-                href="#leadership" 
-                className="hidden sm:flex items-center space-x-2 text-slate-600 hover:text-purple-600 transition-colors font-medium bg-white/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-slate-200/50 hover:border-purple-200 hover:bg-purple-50/50"
-              >
-                <span className="text-lg">🏛️</span>
-                <span>Leadership</span>
-              </Link>
-              <Link 
                 href="/admin/newsletter" 
                 className="hidden sm:flex items-center space-x-2 text-slate-600 hover:text-amber-600 transition-colors font-medium bg-white/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-slate-200/50 hover:border-amber-200 hover:bg-amber-50/50"
               >
@@ -68,16 +54,34 @@ export default function Home() {
               Share memories, connect with fellow alumni, and continue the fellowship 
               that began in Ondo Region.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/memories/new" className="group relative bg-gradient-to-r from-amber-600 to-orange-600 text-white px-10 py-4 rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
-                <span className="relative z-10">Share a Memory</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-center max-w-5xl mx-auto">
+              <Link href="/memories/new" className="group relative bg-gradient-to-r from-amber-600 to-orange-600 text-white px-8 py-4 rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                <span className="relative z-10 flex items-center justify-center space-x-2">
+                  <span>📸</span>
+                  <span>Share a Memory</span>
+                </span>
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
-              <Link href="/alumni" className="group bg-gradient-to-r from-purple-600 to-purple-700 text-white px-10 py-4 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
-                Browse Alumni
+              
+              <Link href="/alumni" className="group bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                <span className="flex items-center justify-center space-x-2">
+                  <span>👥</span>
+                  <span>Browse Alumni</span>
+                </span>
               </Link>
-              <Link href="/prayers" className="group bg-white/10 backdrop-blur-md border border-white/20 text-white px-10 py-4 rounded-xl hover:bg-white/20 transition-all duration-300 font-semibold text-lg">
-                Prayer Requests
+              
+              <Link href="/prayers" className="group bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-8 py-4 rounded-xl hover:from-emerald-700 hover:to-emerald-800 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                <span className="flex items-center justify-center space-x-2">
+                  <span>🙏</span>
+                  <span>Prayer Requests</span>
+                </span>
+              </Link>
+              
+              <Link href="/exco" className="group bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-8 py-4 rounded-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 border-2 border-yellow-300">
+                <span className="flex items-center justify-center space-x-2">
+                  <span>👑</span>
+                  <span>EXCO Leadership</span>
+                </span>
               </Link>
             </div>
           </div>
