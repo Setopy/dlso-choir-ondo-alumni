@@ -1,3 +1,4 @@
+// src/lib/auth.ts
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
@@ -21,8 +22,36 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, user }) {
       if (session.user) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (session.user as any).id = user.id
+        session.user.id = user.id
+        
+        // Collect email for newsletter when user signs in
+        if (session.user.email) {
+          try {
+            // ✅ Fixed: Get database instance correctly
+            const client = await clientPromise
+            const db = client.db()
+            
+            // Check if email already exists
+            const existingEmail = await db.collection('newsletter_emails').findOne({
+              email: session.user.email
+            })
+            
+            if (!existingEmail) {
+              // Add new email to newsletter collection
+              await db.collection('newsletter_emails').insertOne({
+                email: session.user.email,
+                name: session.user.name || '',
+                source: 'google_signin',
+                subscribedAt: new Date().toISOString(),
+                subscribed: true,
+                country: 'Unknown',
+                createdAt: new Date()
+              })
+            }
+          } catch (error) {
+            console.error('Error collecting email for newsletter:', error)
+          }
+        }
       }
       return session
     },

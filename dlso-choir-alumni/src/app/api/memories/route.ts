@@ -1,37 +1,59 @@
+// src/app/api/memories/route.ts - SIMPLE VERSION
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { connectToDatabase } from '@/lib/mongodb'
 
-export async function GET() {
+// GET memories - NO AUTH REQUIRED (everyone can view)
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url)
+    const limit = parseInt(searchParams.get('limit') || '20')
+
     const { db } = await connectToDatabase()
+
     const memories = await db.collection('memories')
-      .find({})
+      .find({ isPublic: true })
       .sort({ createdAt: -1 })
+      .limit(limit)
       .toArray()
-    
-    return NextResponse.json(memories)
+
+    return NextResponse.json({
+      success: true,
+      memories: memories.map(memory => ({
+        ...memory,
+        _id: memory._id.toString()
+      }))
+    })
+
   } catch (error) {
     console.error('Error fetching memories:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch memories' },
+      { error: 'Failed to fetch memories' }, 
       { status: 500 }
     )
   }
 }
 
+// POST memory - REQUIRES AUTH (only signed-in users can post)
 export async function POST(request: NextRequest) {
   try {
-    // ✅ GET SESSION WITH YOUR AUTH CONFIG
+    // Check if user is signed in (but don't block the endpoint)
     const session = await getServerSession(authOptions)
-    console.log('Session data:', session) // Debug log
-    console.log('User info:', session?.user) // Debug user details
     
-    const body = await request.json()
-    const { title, description, year, occasion, imageUrl } = body
+    if (!session?.user) {
+      return NextResponse.json(
+        { 
+          error: 'Please sign in to share memories',
+          requiresAuth: true 
+        }, 
+        { status: 401 }
+      )
+    }
 
-    // Validate required fields
+    const body = await request.json()
+    const { title, description, imageUrl, category } = body
+
     if (!title || !description) {
       return NextResponse.json(
         { error: 'Title and description are required' }, 
@@ -39,78 +61,42 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Add timeout for database operation
-    const dbOperation = async () => {
-      const { db } = await connectToDatabase()
+    const { db } = await connectToDatabase()
+
+    // Create memory with user info
+    const memory = {
+      title,
+      description,
+      imageUrl: imageUrl || null,
+      category: category || 'general',
       
-      const newMemory = {
-        title,
-        description,
-        year: year || '',
-        occasion: occasion || '',
-        imageUrl: imageUrl || '',
-        // ✅ USE REAL USER INFO FROM YOUR SESSION
-        authorName: session?.user?.name || 'Anonymous',
-        authorEmail: session?.user?.email || '',
-        authorImage: session?.user?.image || '',
-        authorId: session?.user?.id || session?.user?.email || '', // Use your custom ID
-        likes: 0,
-        likedBy: [],
-        comments: [],
-        status: 'active',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
+      // User attribution
+      authorId: session.user.id,
+      authorName: session.user.name,
+      authorEmail: session.user.email,
+      authorImage: session.user.image,
       
-      console.log('Creating memory with author:', newMemory.authorName) // Debug log
-      console.log('Session exists:', !!session) // Debug session existence
-      
-      const result = await db.collection('memories').insertOne(newMemory)
-      return result
+      // Metadata
+      createdAt: new Date(),
+      isPublic: true,
+      viewCount: 0,
+      likes: []
     }
 
-    // Race the database operation against a timeout
-    const result = await Promise.race([
-      dbOperation(),
-      new Promise<never>((_, reject) => 
-        setTimeout(() => reject(new Error('Database operation timeout')), 10000)
-      )
-    ])
-    
+    const result = await db.collection('memories').insertOne(memory)
+
+    console.log(`✅ Memory created by: ${session.user.name} (${session.user.email})`)
+
     return NextResponse.json({
       success: true,
-      id: result.insertedId,
       message: 'Memory shared successfully!',
-      imageUrl: imageUrl,
-      authorName: session?.user?.name || 'Anonymous', // Return author info for confirmation
-      debug: {
-        sessionExists: !!session,
-        userName: session?.user?.name,
-        userEmail: session?.user?.email
-      }
-    })
+      memoryId: result.insertedId
+    }, { status: 201 })
 
   } catch (error) {
     console.error('Error creating memory:', error)
-    
-    // Return more specific error messages
-    if (error instanceof Error) {
-      if (error.message.includes('timeout')) {
-        return NextResponse.json(
-          { error: 'Database connection timeout. Please try again.' },
-          { status: 503 }
-        )
-      }
-      if (error.message.includes('connection')) {
-        return NextResponse.json(
-          { error: 'Database connection failed. Please try again.' },
-          { status: 503 }
-        )
-      }
-    }
-    
     return NextResponse.json(
-      { error: 'Failed to create memory. Please try again.' },
+      { error: 'Failed to create memory' }, 
       { status: 500 }
     )
   }
