@@ -154,7 +154,7 @@ export const initialExcoMembers: IExcoMember[] = [
   {
     id: "exco_prayer",
     name: "Olugbenga-OWOEYE Adejumoke",
-    title: "Sis.",
+    title: "Mrs",
     role: "Prayer & Welfare Secretary",
     phone: "+234 803 679 8012",
     whatsappLink: "https://wa.me/2348036798012",
@@ -211,7 +211,7 @@ export const initialExcoMembers: IExcoMember[] = [
       favoriteMeal: "Mashed beans, and egusi and vegetable accompanied with regular swallow",
       hobbies: ["Evangelism", "Scripture study", "Research", "Technology innovation", "Music", "Teaching", "Writing", "Family time"]
     },
-    location: "Mexico City",
+    location: "Baja California",
     country: "Mexico",
     ministryFocus: "Technology & Digital Ministry Expansion",
     createdAt: new Date(),
@@ -240,8 +240,8 @@ export async function getAllExcoMembers(): Promise<IExcoMember[]> {
       'Vice President': 2,
       'General Secretary': 3,
       'Financial Secretary': 4,
-      'Program & Publicity Secretary': 5,
-      'Prayer & Welfare Secretary': 6
+      'Program & Publicity Secretary': 6,
+      'Prayer & Welfare Secretary': 5
     }
     
     const members = await collection.find({}).toArray()
