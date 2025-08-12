@@ -117,7 +117,7 @@ const initialExcoMembers = [
       favoriteMeal: "Pounded yam and okro soup",
       hobbies: ["Marital Counselling", "Travelling", "Reading", "Acting", "Photography", "Dancing"]
     },
-    location: "Akure", 
+    location: "Ondo", 
     country: "Nigeria",
     ministryFocus: "Financial Management & Marital Counseling",
     createdAt: new Date(),
