@@ -30,9 +30,9 @@ const initialExcoMembers = [
       favoriteMeal: "Anything at the moment",
       hobbies: ["Reading", "Counseling", "Teaching", "Community Service"]
     },
-    location: "Akure",
+    location: "Lagos",
     country: "Nigeria",
-    ministryFocus: "Presidential Leadership & Spiritual Development",
+    ministryFocus: "Alumni cordination & Spiritual Development",
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -126,7 +126,7 @@ const initialExcoMembers = [
   {
     id: "exco_prayer",
     name: "Olugbenga-OWOEYE Adejumoke",
-    title: "Sis.",
+    title: "Mrs",
     role: "Prayer & Welfare Secretary",
     phone: "+234 803 679 8012",
     whatsappLink: "https://wa.me/2348036798012",
@@ -183,7 +183,7 @@ const initialExcoMembers = [
       favoriteMeal: "Mashed beans, and egusi and vegetable accompanied with regular swallow",
       hobbies: ["Evangelism", "Scripture study", "Research", "Technology innovation", "Music", "Teaching", "Writing", "Family time"]
     },
-    location: "Mexico City",
+    location: "Baja California",
     country: "Mexico",
     ministryFocus: "Technology & Digital Ministry Expansion",
     createdAt: new Date(),
