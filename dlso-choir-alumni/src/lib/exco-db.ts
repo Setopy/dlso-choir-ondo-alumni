@@ -60,7 +60,7 @@ export const initialExcoMembers: IExcoMember[] = [
     },
     location: "Akure",
     country: "Nigeria",
-    ministryFocus: "Coordinate the day-to-day operations and administrative functions of the Alumni group.",
+    ministryFocus: "Presidential Leadership & Spiritual Development",
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -84,7 +84,7 @@ export const initialExcoMembers: IExcoMember[] = [
     },
     location: "South Africa",
     country: "South Africa", 
-    ministryFocus: "Ministry co-founder & Medical engagements",
+    ministryFocus: "International Relations & Medical Ministry",
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -211,7 +211,7 @@ export const initialExcoMembers: IExcoMember[] = [
       favoriteMeal: "Mashed beans, and egusi and vegetable accompanied with regular swallow",
       hobbies: ["Evangelism", "Scripture study", "Research", "Technology innovation", "Music", "Teaching", "Writing", "Family time"]
     },
-    location: "Mexico",
+    location: "Mexico City",
     country: "Mexico",
     ministryFocus: "Technology & Digital Ministry Expansion",
     createdAt: new Date(),
@@ -240,8 +240,8 @@ export async function getAllExcoMembers(): Promise<IExcoMember[]> {
       'Vice President': 2,
       'General Secretary': 3,
       'Financial Secretary': 4,
-      'Program & Publicity Secretary': 6,
-      'Prayer & Welfare Secretary': 5
+      'Program & Publicity Secretary': 5,
+      'Prayer & Welfare Secretary': 6
     }
     
     const members = await collection.find({}).toArray()
