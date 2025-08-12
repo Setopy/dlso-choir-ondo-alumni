@@ -1,4 +1,4 @@
-// src/lib/exco-db.ts
+// src/lib/exco-db.ts - FINAL VERSION: Keeps your structure + synchronized data
 import { connectToDatabase } from './mongodb'
 
 export interface IExcoMember {
@@ -29,7 +29,7 @@ export interface IExcoMember {
   updatedAt?: Date
 }
 
-// Initial EXCO data to seed the database
+// UPDATED: Synchronized EXCO data to match your requirements
 export const initialExcoMembers: IExcoMember[] = [
   {
     id: "exco_president",
@@ -38,15 +38,15 @@ export const initialExcoMembers: IExcoMember[] = [
     role: "President",
     phone: "+234 812 931 9690",
     whatsappLink: "https://wa.me/2348129319690",
-    bio: "MD of Zircon MFB, CFO of Group of Companies, HR & Tax Consultant, Pastor at RCCG Royal Diadem & Instructor at Kenneth Hagin Rhema Bible Training Centre. On a mission to lay Godly foundation for many generations.",
-    detailedBio: "Passionate leader with core values of 'Love God & Value People'. Dedicated to reaching the least, lost and last, with a mission to lay Godly foundation for many generations.",
+    bio: "I love God & Value People. I am on a mission to laying Godly foundation for many generations. Reaching the least, lost & last. I love reading & counseling.",
+    detailedBio: "President of DLSO Alumni Ondo, MD Zircon MFB, CFO of Group of Companies, HR & Tax Consultant, Pastor at RCCG Royal Diadem & Instructor at Kenneth Hagin Rhema Bible Training Centre-Nigeria. Passionate leader with core values of 'Love God & Value People'. Dedicated to reaching the least, lost and last, with a mission to laying Godly foundation for many generations.",
     currentPositions: [
       "President, DLSO Alumni Ondo",
       "MD, Zircon MFB", 
       "CFO, Group of Companies",
       "HR & Tax Consultant",
       "Pastor, RCCG Royal Diadem",
-      "Instructor, Kenneth Hagin Rhema Bible Training Centre"
+      "Instructor, Kenneth Hagin Rhema Bible Training Centre-Nigeria"
     ],
     personalInfo: {
       birthday: "October 23",
@@ -55,11 +55,12 @@ export const initialExcoMembers: IExcoMember[] = [
       bibleVerse: "Mark 11:23",
       maritalStatus: "Happily Married with 4 Children",
       favoriteColors: ["Black", "Navy Blue", "White", "Red"],
-      favoriteMeal: "Anything at the moment"
+      favoriteMeal: "Anything at the moment",
+      hobbies: ["Reading", "Counseling", "Teaching", "Community Service"]
     },
     location: "Akure",
     country: "Nigeria",
-    ministryFocus: "Presidential Leadership & Spiritual Development",
+    ministryFocus: "Coordinate the day-to-day operations and administrative functions of the Alumni group.",
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -81,30 +82,37 @@ export const initialExcoMembers: IExcoMember[] = [
     personalInfo: {
       maritalStatus: "Married (Mummy GO)"
     },
-    location: "Cape Town",
+    location: "South Africa",
     country: "South Africa", 
-    ministryFocus: "International Relations & Medical Ministry",
+    ministryFocus: "Ministry co-founder & Medical engagements",
     createdAt: new Date(),
     updatedAt: new Date()
   },
   {
     id: "exco_gensec",
-    name: "Ayokunle Akinsade",
+    name: "Ayokunle Felix AKINSADE",
     title: "Dr.",
     role: "General Secretary",
     phone: "+234 806 216 2554",
     whatsappLink: "https://wa.me/2348062162554", 
-    bio: "Mental Health Physician practicing in Ido Ekiti, Ekiti State. Ekiti North State DLCF Choir Master and Associate Coordinator. Politically engaged professional.",
-    detailedBio: "Dedicated mental health physician providing healthcare guidance and maintaining alumni records. Passionate about political and social development with focus on community advancement.",
+    bio: "I Love and enjoy my family love. I love to share my faith, the gospel of Christ with people around me. I believe in practical christianity and believers vying for leadership positions. As an enthusiastic Mental Health Physician, counselling and psychoeducation is my 2nd nature.",
+    detailedBio: "General Secretary of DLSO Alumni Ondo, DLCF Associate Coordinator and DLCF State Choir Master for Ekiti North State, Mental Health Physician at Federal Teaching Hospital Ido-Ekiti (FETHI), Chief Resident of the Department of Mental Health FETHI, and Manager of Shadel Business World International. Passionate about family, sharing the gospel as the power of God unto salvation, practical Christianity, political leadership for moral sustenance, mental health counseling, and legitimate business ventures. Believes strongly that believers are a main component of hope for sustenance of morality and integrity in society.",
     currentPositions: [
       "General Secretary, DLSO Alumni Ondo",
-      "Mental Health Physician, Ido Ekiti",
-      "Ekiti North State DLCF Choir Master",
-      "Associate Coordinator, DLCF",
-      "Community Political Activist"
+      "DLCF Associate Coordinator, Ekiti North State",
+      "DLCF State Choir Master, Ekiti North State", 
+      "Mental Health Physician, Federal Teaching Hospital Ido-Ekiti (FETHI)",
+      "Chief Resident, Department of Mental Health, FETHI",
+      "Manager, Shadel Business World International"
     ],
     personalInfo: {
-      maritalStatus: "Married"
+      birthday: "June 7",
+      wedding: "August 10",
+      bibleVerse: "Philippians 1:6, Matthew 5:13-16:17",
+      maritalStatus: "Happily Married with 3 lovely girls",
+      favoriteColors: ["Blue", "White"],
+      favoriteMeal: "Semo/Wheat with vegetables soup, jollof and fried rice with cream and vegetable salad",
+      hobbies: ["Family time", "Sharing the gospel", "Mental health counseling", "Business ventures", "Classical music", "Contemporary music", "Traditional music", "Political engagement"]
     },
     location: "Ido Ekiti",
     country: "Nigeria",
@@ -113,44 +121,19 @@ export const initialExcoMembers: IExcoMember[] = [
     updatedAt: new Date()
   },
   {
-    id: "exco_program",
-    name: "Seyi Ogunji",
-    title: "Engr.",
-    role: "Program & Publicity Secretary",
-    phone: "+526634369566", 
-    whatsappLink: "https://wa.me/526634369566",
-    bio: "Pioneer Pastor of DCLM in Mexico (Daddy SO). Recently completed MSc with honors. AI researcher and specialist leading our technological advancement and international ministry expansion.",
-    detailedBio: "Technology innovator and pioneer pastor in Mexico. AI specialist with MSc honors, driving our digital transformation and international ministry expansion.",
-    currentPositions: [
-      "Program & Publicity Secretary, DLSO Alumni",
-      "Pioneer Pastor, DCLM Mexico (Daddy SO)",
-      "AI Research Specialist", 
-      "MSc Graduate with Honors",
-      "Technology Innovation Lead"
-    ],
-    personalInfo: {
-      maritalStatus: "Married (Daddy SO)"
-    },
-    location: "Mexico City",
-    country: "Mexico",
-    ministryFocus: "Technology & Digital Ministry Expansion",
-    createdAt: new Date(),
-    updatedAt: new Date()
-  },
-  {
     id: "exco_financial",
-    name: "EbunOluwa Samson-Molawa",
+    name: "Ebunoluwa Prosper Samson-Molawa",
     title: "Mrs.",
     role: "Financial Secretary", 
     phone: "+234 803 585 0150",
     whatsappLink: "https://wa.me/2348035850150",
-    bio: "Managing Director of Twytas Pharmacy Ltd in Akure and Chemistry Tutor at Adeyemi Federal University Model Secondary School. General Secretary of CASSON Ondo State.",
-    detailedBio: "Financial leader and pharmacy entrepreneur with diverse professional and personal dimensions. Specialized in marital counseling with passion for interpersonal relationships and educational leadership.",
+    bio: "I love God, I love to praise and worship Him. I admire and value interpersonal relationships. I love Counselling but I focus more on Marital Counselling.",
+    detailedBio: "Financial Secretary of DLSO Alumni Ondo, Managing Director of Twytas Pharmacy Ltd., Akure, Chemistry Tutor at Adeyemi Federal University of Education Model Secondary School, Akure & General Secretary of Counselling Association of Nigeria (CASSON), Ondo State Chapter. Passionate about God, worship, interpersonal relationships, and specialized in marital counselling.",
     currentPositions: [
       "Financial Secretary, DLSO Alumni Ondo",
-      "Managing Director, Twytas Pharmacy Ltd, Akure",
-      "Chemistry Tutor, Adeyemi Federal University Model Secondary School",
-      "General Secretary, CASSON Ondo State"
+      "Managing Director, Twytas Pharmacy Ltd., Akure",
+      "Chemistry Tutor, Adeyemi Federal University of Education Model Secondary School, Akure",
+      "General Secretary, Counselling Association of Nigeria (CASSON), Ondo State Chapter"
     ],
     personalInfo: {
       birthday: "December 17",
@@ -159,7 +142,7 @@ export const initialExcoMembers: IExcoMember[] = [
       bibleVerse: "Psalm 91:1",
       maritalStatus: "Happily Married with 3 Children",
       favoriteColors: ["Peach", "Gold", "Lilac", "Grey", "Chocolate"],
-      favoriteMeal: "Pounded yam with okro soup",
+      favoriteMeal: "Pounded yam and okro soup",
       hobbies: ["Marital Counselling", "Travelling", "Reading", "Acting", "Photography", "Dancing"]
     },
     location: "Akure", 
@@ -170,24 +153,67 @@ export const initialExcoMembers: IExcoMember[] = [
   },
   {
     id: "exco_prayer",
-    name: "Jumoke Owoeye",
+    name: "Olugbenga-OWOEYE Adejumoke",
     title: "Sis.",
     role: "Prayer & Welfare Secretary",
     phone: "+234 803 679 8012",
     whatsappLink: "https://wa.me/2348036798012",
-    bio: "Dedicated prayer warrior and welfare coordinator. Leading our prayer initiatives and coordinating welfare support for alumni in need.",
-    detailedBio: "Committed to the spiritual wellbeing and practical support of our alumni community. Passionate about maintaining spiritual unity across our global network through prayer and welfare coordination.",
+    bio: "I Love impacting lives, especially youths, spreading the knowledge of God and identity of sons. I love good music, Influencing people at any God given opportunity.",
+    detailedBio: "Prayer & Welfare Secretary of DLSO Alumni Ondo, DLSO Worker at DLBC, Women Coordinator at DLBC Ekiti, Manager of Shekinah varieties, and Nurse at Federal Teaching Hospital Ekiti. Passionate about impacting lives, especially youth ministry, spreading the knowledge of God and identity of sons.",
     currentPositions: [
-      "Prayer & Welfare Secretary, DLSO Alumni",
-      "Prayer Initiatives Coordinator",
-      "Alumni Welfare Support Lead"
+      "Prayer & Welfare Secretary, DLSO Alumni Ondo",
+      "DLSO Worker, DLBC",
+      "Women Coordinator, DLBC Ekiti", 
+      "Manager, Shekinah varieties",
+      "Nurse, Federal Teaching Hospital Ekiti"
     ],
     personalInfo: {
-      maritalStatus: "Married"
+      birthday: "May 2",
+      wedding: "March 1",
+      bornAgain: "August 6",
+      bibleVerse: "Ephesians 5:30, 1 John 4:17",
+      maritalStatus: "Favorably Married with 2 Children",
+      favoriteColors: ["Pink", "Purple"],
+      favoriteMeal: "Fried rice with creamed vegetable salad",
+      hobbies: ["Impacting lives", "Youth ministry", "Good music", "Influencing people"]
     },
-    location: "Lagos",
+    location: "Ekiti",
     country: "Nigeria", 
     ministryFocus: "Prayer Ministry & Alumni Welfare",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: "exco_program",
+    name: "Seyi Tope Ogunji",
+    title: "Engr.",
+    role: "Program & Publicity Secretary",
+    phone: "+526634369566", 
+    whatsappLink: "https://wa.me/526634369566",
+    bio: "Adept believer in Scripture-based family life. I strongly believe IMPOSSIBLE IS NOTHING and strive for mastery. I shamelessly believe in the infallibility of the scriptures and strictly regulate my life with its tenets. I value evangelism, humility, proactivity and growth mindset.",
+    detailedBio: "Program & Publicity Coordinator of DLSO Alumni Ondo, Founding Pastor of Deeper Life Bible Church Baja California Mexico (God-sent Missionary to Mexico), International published Author (Springer Nature and Scopus-indexed), Fully-funded PhD student in Quantum Cryptography & Artificial Intelligence at Instituto Politecnico Nacional (IPN) Mexico, MSc in Digital systems (Artificial Intelligence & Cryptography) with Cum Laude award (The first black recipient at the centre), and Founder of ELITAZIT International Digital School Mexico. Passionate about Scripture-based living, believing impossible is nothing, evangelism, and technological advancement in ministry.",
+    currentPositions: [
+      "Program & Publicity Coordinator, DLSO Alumni Ondo",
+      "Founding Pastor, Deeper Life Bible Church, Baja California, Mexico",
+      "God-sent Missionary to Mexico",
+      "International published Author (Springer Nature and Scopus-indexed)",
+      "Fully-funded PhD student (Quantum Cryptography & AI), Instituto Politecnico Nacional, Mexico",
+      "MSc Digital systems (AI & Cryptography) with Cum Laude award",
+      "Founder, ELITAZIT International Digital School, Mexico"
+    ],
+    personalInfo: {
+      birthday: "December 17",
+      wedding: "September 12",
+      bornAgain: "January 11",
+      bibleVerse: "Isaiah 40:3, Hebrews 12:14, 1 Timothy 3:16",
+      maritalStatus: "Happily Married with 4 lovely kids (a set of twins inclusive)",
+      favoriteColors: ["Blue", "Green"],
+      favoriteMeal: "Mashed beans, and egusi and vegetable accompanied with regular swallow",
+      hobbies: ["Evangelism", "Scripture study", "Research", "Technology innovation", "Music", "Teaching", "Writing", "Family time"]
+    },
+    location: "Mexico",
+    country: "Mexico",
+    ministryFocus: "Technology & Digital Ministry Expansion",
     createdAt: new Date(),
     updatedAt: new Date()
   }
@@ -208,10 +234,31 @@ export async function getAllExcoMembers(): Promise<IExcoMember[]> {
       await collection.insertMany(initialExcoMembers)
     }
     
-    const members = await collection.find({}).sort({ role: 1 }).toArray()
+    // Define role hierarchy for proper sorting
+    const roleHierarchy = {
+      'President': 1,
+      'Vice President': 2,
+      'General Secretary': 3,
+      'Financial Secretary': 4,
+      'Program & Publicity Secretary': 6,
+      'Prayer & Welfare Secretary': 5
+    }
+    
+    const members = await collection.find({}).toArray()
+    
+    // Sort members by role hierarchy, then by name
+    const sortedMembers = members.sort((a, b) => {
+      const roleOrderA = roleHierarchy[a.role as keyof typeof roleHierarchy] || 99
+      const roleOrderB = roleHierarchy[b.role as keyof typeof roleHierarchy] || 99
+      
+      if (roleOrderA !== roleOrderB) {
+        return roleOrderA - roleOrderB
+      }
+      return a.name.localeCompare(b.name)
+    })
     
     // Remove MongoDB _id from response and ensure proper typing
-    return members.map(member => {
+    return sortedMembers.map(member => {
       const { _id, ...memberData } = member
       return memberData as IExcoMember
     })

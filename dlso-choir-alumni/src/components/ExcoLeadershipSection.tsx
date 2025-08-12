@@ -29,19 +29,6 @@ interface ExcoMember {
   ministryFocus: string
 }
 
-// Hierarchical sorting function - Publicity last as requested
-const getPositionHierarchy = (role: string): number => {
-  const hierarchy = {
-    'President': 1,
-    'Vice President': 2,
-    'General Secretary': 3,
-    'Financial Secretary': 4,
-    'Prayer & Welfare Secretary': 5,
-    'Program & Publicity Secretary': 6  // Last as requested
-  }
-  return hierarchy[role as keyof typeof hierarchy] || 99
-}
-
 export default function ExcoLeadershipSection() {
   const [selectedMember, setSelectedMember] = useState<ExcoMember | null>(null)
   const [members, setMembers] = useState<ExcoMember[]>([])
@@ -68,18 +55,7 @@ export default function ExcoLeadershipSection() {
         data.members.forEach((member: ExcoMember) => {
           console.log(`- ${member.name}: ID = "${member.id}" (type: ${typeof member.id})`)
         })
-        
-        // ✅ HIERARCHICAL SORTING - Publicity Secretary will be last
-        const sortedMembers = data.members.sort((a: ExcoMember, b: ExcoMember) => {
-          return getPositionHierarchy(a.role) - getPositionHierarchy(b.role)
-        })
-        
-        console.log('📋 Members sorted by hierarchy:')
-        sortedMembers.forEach((member: ExcoMember, index: number) => {
-          console.log(`${index + 1}. ${member.role} - ${member.name}`)
-        })
-        
-        setMembers(sortedMembers)
+        setMembers(data.members)
       } else {
         setError(data.error || 'Failed to fetch EXCO members')
       }
@@ -101,7 +77,7 @@ export default function ExcoLeadershipSection() {
 
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('upload_preset', 'choir_memories') // Using your existing preset
+    formData.append('upload_preset', 'choir_memories')
 
     const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
     console.log('Upload URL:', uploadUrl)
@@ -152,7 +128,6 @@ export default function ExcoLeadershipSection() {
     console.log('memberId length:', memberId?.length)
     console.log('file:', file.name, file.size)
 
-    // Check if member ID is valid
     if (!memberId || memberId.trim() === '') {
       alert('⚠️ Member ID is missing! Please try again.')
       console.error('❌ Member ID is invalid:', memberId)
@@ -163,13 +138,11 @@ export default function ExcoLeadershipSection() {
     setUploadProgress(0)
 
     try {
-      // Step 1: Upload to Cloudinary (same as memories)
       setUploadProgress(25)
       console.log('📤 Uploading to Cloudinary...')
       const imageUrl = await uploadImageToCloudinary(file)
       console.log('📸 Cloudinary upload successful:', imageUrl)
 
-      // Step 2: Update database with the Cloudinary URL
       setUploadProgress(75)
       console.log('📤 Sending to API:', { memberId, imageUrl })
       
@@ -237,6 +210,26 @@ export default function ExcoLeadershipSection() {
     if (role === 'Financial Secretary') return 'bg-purple-500 text-white'
     if (role === 'Prayer & Welfare Secretary') return 'bg-pink-500 text-white'
     return 'bg-gray-500 text-white'
+  }
+
+  // ENHANCED: Better Bible verse formatting for multiple verses
+  const formatBibleVerses = (verses?: string) => {
+    if (!verses) return null
+    const verseList = verses.split(',').map(verse => verse.trim())
+    if (verseList.length === 1) return verses
+    return verseList.join(' • ')
+  }
+
+  // ENHANCED: Better position formatting for long titles
+  const formatPosition = (position: string) => {
+    // Break long positions into multiple lines if needed
+    if (position.length > 50) {
+      const parts = position.split(',')
+      if (parts.length > 1) {
+        return parts.map(part => part.trim()).join(',\n')
+      }
+    }
+    return position
   }
 
   const triggerFileInput = (memberId: string) => {
@@ -363,7 +356,8 @@ export default function ExcoLeadershipSection() {
                     {member.ministryFocus}
                   </div>
                   
-                  <p className="text-purple-100 text-sm mb-6">{member.bio}</p>
+                  {/* ENHANCED: Better bio display with line height */}
+                  <p className="text-purple-100 text-sm mb-6 leading-relaxed">{member.bio}</p>
 
                   <div className="space-y-3">
                     <a href={member.whatsappLink} target="_blank" rel="noopener noreferrer" className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2">
@@ -392,59 +386,176 @@ export default function ExcoLeadershipSection() {
         </div>
       </section>
 
+      {/* ENHANCED: Improved modal layout with better spacing and typography */}
       {selectedMember && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
             
             <button onClick={() => setSelectedMember(null)} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl z-10">
               ✕
             </button>
             
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 rounded-t-xl text-white">
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-8 rounded-t-xl text-white">
               <div className="text-center">
-                <h3 className="text-2xl font-bold mb-2">{selectedMember!.title} {selectedMember!.name}</h3>
-                <div className="text-yellow-400 font-semibold text-lg mb-2">{selectedMember!.role}</div>
-                <div className="text-purple-200">{selectedMember!.location}, {selectedMember!.country}</div>
+                <h3 className="text-3xl font-bold mb-3">{selectedMember!.title} {selectedMember!.name}</h3>
+                <div className="text-yellow-400 font-semibold text-xl mb-3">{selectedMember!.role}</div>
+                <div className="text-purple-200 text-lg">{selectedMember!.location}, {selectedMember!.country}</div>
               </div>
             </div>
             
-            <div className="p-6 space-y-6">
+            <div className="p-8 space-y-8">
+              
+              {/* ENHANCED: Better detailed bio presentation */}
               <div>
-                <h4 className="font-bold text-gray-800 mb-3">Current Positions</h4>
-                <div className="space-y-2">
+                <h4 className="font-bold text-gray-800 text-lg mb-4 flex items-center">
+                  <span className="text-purple-600 mr-2">📋</span>
+                  About {selectedMember!.name}
+                </h4>
+                <div className="bg-purple-50 rounded-lg p-6">
+                  <p className="text-gray-700 leading-relaxed text-base">{selectedMember!.detailedBio}</p>
+                </div>
+              </div>
+
+              {/* ENHANCED: Better current positions display */}
+              <div>
+                <h4 className="font-bold text-gray-800 text-lg mb-4 flex items-center">
+                  <span className="text-purple-600 mr-2">💼</span>
+                  Current Positions & Responsibilities
+                </h4>
+                <div className="grid gap-3">
                   {selectedMember!.currentPositions.map((position, index) => (
-                    <div key={index} className="p-2 bg-purple-50 rounded-lg">
-                      <span className="text-gray-700">{position}</span>
+                    <div key={index} className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                      <span className="text-gray-700 font-medium whitespace-pre-line">
+                        {formatPosition(position)}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
 
+              {/* ENHANCED: Comprehensive personal information display */}
               {selectedMember!.personalInfo && (
                 <div>
-                  <h4 className="font-bold text-gray-800 mb-3">Personal Information</h4>
-                  <div className="bg-purple-50 rounded-lg p-4 space-y-3 text-sm">
-                    {selectedMember!.personalInfo.birthday && (
-                      <div>Birthday: {selectedMember!.personalInfo.birthday}</div>
-                    )}
+                  <h4 className="font-bold text-gray-800 text-lg mb-4 flex items-center">
+                    <span className="text-purple-600 mr-2">👤</span>
+                    Personal Information
+                  </h4>
+                  <div className="bg-purple-50 rounded-lg p-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      
+                      {selectedMember!.personalInfo.birthday && (
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">🎂</span>
+                          <div>
+                            <div className="font-semibold text-gray-800">Birthday</div>
+                            <div className="text-gray-600">{selectedMember!.personalInfo.birthday}</div>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedMember!.personalInfo.wedding && (
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">💒</span>
+                          <div>
+                            <div className="font-semibold text-gray-800">Wedding Anniversary</div>
+                            <div className="text-gray-600">{selectedMember!.personalInfo.wedding}</div>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedMember!.personalInfo.bornAgain && (
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">✝️</span>
+                          <div>
+                            <div className="font-semibold text-gray-800">Born Again</div>
+                            <div className="text-gray-600">{selectedMember!.personalInfo.bornAgain}</div>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedMember!.personalInfo.maritalStatus && (
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">👨‍👩‍👧‍👦</span>
+                          <div>
+                            <div className="font-semibold text-gray-800">Family</div>
+                            <div className="text-gray-600">{selectedMember!.personalInfo.maritalStatus}</div>
+                          </div>
+                        </div>
+                      )}
+
+                    </div>
+
+                    {/* ENHANCED: Better Bible verse display for multiple verses */}
                     {selectedMember!.personalInfo.bibleVerse && (
-                      <div>Favorite Verse: {selectedMember!.personalInfo.bibleVerse}</div>
+                      <div className="mt-6 p-4 bg-white rounded-lg border border-purple-200">
+                        <div className="flex items-start space-x-3">
+                          <span className="text-2xl">📖</span>
+                          <div className="flex-1">
+                            <div className="font-semibold text-gray-800 mb-2">Favorite Bible Verse(s)</div>
+                            <div className="text-gray-700 font-medium italic">
+                              {formatBibleVerses(selectedMember!.personalInfo.bibleVerse)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     )}
-                    {selectedMember!.personalInfo.maritalStatus && (
-                      <div>{selectedMember!.personalInfo.maritalStatus}</div>
-                    )}
-                    {selectedMember!.personalInfo.favoriteColors && selectedMember!.personalInfo.favoriteColors.length > 0 && (
-                      <div>Favorite Colors: {selectedMember!.personalInfo.favoriteColors.join(', ')}</div>
-                    )}
+
+                    {/* ENHANCED: Better color and meal display */}
+                    <div className="grid md:grid-cols-2 gap-6 mt-6">
+                      
+                      {selectedMember!.personalInfo.favoriteColors && selectedMember!.personalInfo.favoriteColors.length > 0 && (
+                        <div>
+                          <div className="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span className="mr-2">🎨</span>
+                            Favorite Colors
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedMember!.personalInfo.favoriteColors.map((color, index) => (
+                              <span key={index} className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                                {color}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedMember!.personalInfo.favoriteMeal && (
+                        <div>
+                          <div className="font-semibold text-gray-800 mb-2 flex items-center">
+                            <span className="mr-2">🍽️</span>
+                            Favorite Meal
+                          </div>
+                          <div className="text-gray-700 bg-purple-100 rounded-lg p-3">
+                            {selectedMember!.personalInfo.favoriteMeal}
+                          </div>
+                        </div>
+                      )}
+
+                    </div>
+
+                    {/* ENHANCED: Better hobbies display */}
                     {selectedMember!.personalInfo.hobbies && selectedMember!.personalInfo.hobbies.length > 0 && (
-                      <div>Hobbies: {selectedMember!.personalInfo.hobbies.join(', ')}</div>
+                      <div className="mt-6">
+                        <div className="font-semibold text-gray-800 mb-3 flex items-center">
+                          <span className="mr-2">🎯</span>
+                          Hobbies & Interests
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedMember!.personalInfo.hobbies.map((hobby, index) => (
+                            <span key={index} className="px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-full text-sm font-medium">
+                              {hobby}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     )}
+
                   </div>
                 </div>
               )}
 
-              <div className="text-center">
-                <a href={selectedMember!.whatsappLink} target="_blank" rel="noopener noreferrer" className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center space-x-2">
+              <div className="text-center pt-6 border-t border-gray-200">
+                <a href={selectedMember!.whatsappLink} target="_blank" rel="noopener noreferrer" className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center space-x-2 text-lg">
                   <span>💬</span>
                   <span>Connect via WhatsApp</span>
                 </a>
