@@ -54,33 +54,45 @@ export default function Home() {
               Share memories, connect with fellow alumni, and continue the fellowship 
               that began in Ondo Region.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-center max-w-5xl mx-auto">
-              <Link href="/memories/new" className="group relative bg-gradient-to-r from-amber-600 to-orange-600 text-white px-8 py-4 rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 justify-center max-w-6xl mx-auto">
+              <Link href="/memories/new" className="group relative bg-gradient-to-r from-amber-600 to-orange-600 text-white px-6 py-4 rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
                 <span className="relative z-10 flex items-center justify-center space-x-2">
                   <span>📸</span>
-                  <span>Share a Memory</span>
+                  <span className="hidden sm:inline">Share a Memory</span>
+                  <span className="sm:hidden">Memory</span>
                 </span>
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
               
-              <Link href="/alumni" className="group bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+              <Link href="/alumni" className="group bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-4 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
                 <span className="flex items-center justify-center space-x-2">
                   <span>👥</span>
-                  <span>Browse Alumni</span>
+                  <span className="hidden sm:inline">Browse Alumni</span>
+                  <span className="sm:hidden">Alumni</span>
                 </span>
               </Link>
               
-              <Link href="/prayers" className="group bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-8 py-4 rounded-xl hover:from-emerald-700 hover:to-emerald-800 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+              <Link href="/prayers" className="group bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-6 py-4 rounded-xl hover:from-emerald-700 hover:to-emerald-800 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
                 <span className="flex items-center justify-center space-x-2">
                   <span>🙏</span>
-                  <span>Prayer Requests</span>
+                  <span className="hidden sm:inline">Prayer Requests</span>
+                  <span className="sm:hidden">Prayers</span>
                 </span>
               </Link>
               
-              <Link href="/exco" className="group bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-8 py-4 rounded-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 border-2 border-yellow-300">
+              <Link href="/exco" className="group bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-4 rounded-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 border-2 border-yellow-300">
                 <span className="flex items-center justify-center space-x-2">
                   <span>👑</span>
-                  <span>EXCO Leadership</span>
+                  <span className="hidden sm:inline">EXCO Leadership</span>
+                  <span className="sm:hidden">EXCO</span>
+                </span>
+              </Link>
+
+              <Link href="/chairman" className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 border-2 border-blue-300">
+                <span className="flex items-center justify-center space-x-2">
+                  <span>🎖️</span>
+                  <span className="hidden sm:inline">Group Chairman</span>
+                  <span className="sm:hidden">Chairman</span>
                 </span>
               </Link>
             </div>
@@ -158,6 +170,7 @@ export default function Home() {
                 <li><Link href="/alumni" className="hover:text-amber-400 transition-colors">Alumni Directory</Link></li>
                 <li><Link href="/prayers" className="hover:text-amber-400 transition-colors">Prayer Requests</Link></li>
                 <li><Link href="/exco" className="hover:text-amber-400 transition-colors">EXCO Leadership</Link></li>
+                <li><Link href="/chairman" className="hover:text-amber-400 transition-colors">Group Chairman</Link></li>
                 <li><Link href="/admin/newsletter" className="hover:text-amber-400 transition-colors">Newsletter Admin</Link></li>
               </ul>
             </div>
