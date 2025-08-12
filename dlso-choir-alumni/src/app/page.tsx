@@ -44,9 +44,9 @@ export default function Home() {
         <div className="relative max-w-6xl mx-auto px-4 py-24">
           <div className="text-center">
             <h2 className="text-6xl font-bold text-white mb-6 leading-tight">
-              Connecting Voices,
+              Sharing Faith,
               <span className="block bg-gradient-to-r from-amber-400 via-yellow-300 to-orange-400 bg-clip-text text-transparent">
-                Sharing Faith
+                Connecting Faces
               </span>
             </h2>
             <p className="text-xl text-slate-200 max-w-3xl mx-auto mb-10 leading-relaxed">
@@ -117,12 +117,12 @@ export default function Home() {
 
           <div className="group bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 text-center border border-slate-200/50 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
             <div className="w-20 h-20 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
-              <span className="text-3xl">🎶</span>
+              <span className="text-3xl">🕊️</span>
             </div>
             <h3 className="text-2xl font-bold text-slate-800 mb-4">Ministry Archives</h3>
             <p className="text-slate-600 leading-relaxed">
-              Listen to recordings of our performances, access sheet music, 
-              and celebrate the ministry legacy we created together.
+              Explore recordings of ministry events, access teaching resources, worship materials, 
+              and celebrate the diverse ministry legacy we built together across all groups.
             </p>
           </div>
         </div>
