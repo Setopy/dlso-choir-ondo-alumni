@@ -20,7 +20,7 @@ const nextConfig = {
         port: '',
         pathname: '**',
       },
-      // ✅ ADD: Vercel Blob domains
+      // ✅ CRITICAL: Add Vercel Blob domains for production
       {
         protocol: 'https',
         hostname: '*.public.blob.vercel-storage.com',
@@ -33,10 +33,17 @@ const nextConfig = {
         port: '',
         pathname: '**',
       },
+      // ✅ ADD: Your specific blob store
+      {
+        protocol: 'https',
+        hostname: 'mzf1o6wyyat4t2gj.public.blob.vercel-storage.com',
+        port: '',
+        pathname: '**',
+      }
     ],
   },
   
-  // ✅ ENHANCED: Your original CSP with Vercel Blob support
+  // ✅ ENHANCED: CSP with explicit Vercel Blob support
   async headers() {
     return [
       {
@@ -44,14 +51,14 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self' 'unsafe-eval' 'unsafe-inline' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com; frame-src https:; connect-src 'self' https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com;"
+            value: "default-src 'self' 'unsafe-eval' 'unsafe-inline' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com mzf1o6wyyat4t2gj.public.blob.vercel-storage.com; frame-src https:; connect-src 'self' https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com;"
           }
         ],
       },
     ]
   },
 
-  // ✅ FIXED: Updated for Next.js 15 - removed experimental prefix
+  // ✅ ADD: Serverless optimization for Netlify
   serverExternalPackages: ['@vercel/blob'],
 }
 
