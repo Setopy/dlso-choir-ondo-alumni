@@ -1,3 +1,4 @@
+// src/components/RecentActivity.tsx - FIXED VERSION
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -32,11 +33,23 @@ export default function RecentActivity() {
       try {
         const response = await fetch('/api/memories')
         if (response.ok) {
-          const memories: MemoryData[] = await response.json()
+          const data = await response.json()
+          
+          // ✅ FIXED: Handle correct API response format
+          let memoriesArray: MemoryData[] = []
+          if (Array.isArray(data)) {
+            memoriesArray = data
+          } else if (data.success && Array.isArray(data.memories)) {
+            memoriesArray = data.memories
+          } else {
+            console.error('❌ API returned unexpected format:', data)
+            setActivities([])
+            return
+          }
           
           // Convert memories to activities and sort by date
-          const memoryActivities: Activity[] = memories
-            .slice(0, 5) // Get 5 most recent
+          const memoryActivities: Activity[] = memoriesArray
+            .slice(0, 5) // Now this works because memoriesArray is actually an array
             .map((memory: MemoryData) => ({
               id: memory._id,
               type: 'memory' as const,
@@ -51,6 +64,7 @@ export default function RecentActivity() {
         }
       } catch (error) {
         console.error('Error fetching recent activity:', error)
+        setActivities([]) // Ensure activities is always an array
       } finally {
         setLoading(false)
       }

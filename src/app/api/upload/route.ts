@@ -1,4 +1,4 @@
-// src/app/api/upload/route.ts - AUTHENTICATION RE-ENABLED
+// src/app/api/upload/route.ts - ENHANCED WITH URL DEBUGGING
 import { NextRequest, NextResponse } from 'next/server'
 import { put } from '@vercel/blob'
 import { getServerSession } from 'next-auth'
@@ -6,7 +6,7 @@ import { authOptions } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('🔍 Upload API called (VERCEL BLOB - AUTHENTICATION ENABLED)')
+    console.log('🔍 Upload API called (ENHANCED WITH URL DEBUGGING)')
     
     // Debug environment variables
     console.log('Environment Debug:', {
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       platform: process.env.NETLIFY ? 'Netlify' : 'Other'
     })
 
-    // ✅ RE-ENABLED: Check authentication
+    // Check authentication
     const session = await getServerSession(authOptions)
     if (!session?.user) {
       console.log('❌ No session found')
@@ -50,13 +50,26 @@ export async function POST(request: NextRequest) {
       type: file.type
     })
 
-    // Generate unique filename with actual user
+    // ✅ ENHANCED: Better filename generation with proper extension handling
     const timestamp = Date.now()
     const userId = session.user.email?.split('@')[0] || 'user'
-    const extension = file.name.split('.').pop() || 'jpg'
+    const originalExtension = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+    
+    // Ensure we have a valid image extension
+    const validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp']
+    const extension = validExtensions.includes(originalExtension) ? originalExtension : 'jpg'
+    
     const filename = `memories/${userId}/${timestamp}.${extension}`
 
-    console.log('📁 Generated filename:', filename)
+    console.log('📁 Generated filename details:', {
+      originalName: file.name,
+      originalExtension,
+      finalExtension: extension,
+      filename,
+      userId,
+      timestamp
+    })
+
     console.log('🚀 Starting Vercel Blob upload...')
 
     // Upload to Vercel Blob
@@ -65,13 +78,27 @@ export async function POST(request: NextRequest) {
       token: process.env.BLOB_READ_WRITE_TOKEN,
     })
 
-    console.log('✅ Vercel Blob upload successful:', {
+    // ✅ ENHANCED: Detailed URL logging
+    console.log('✅ Vercel Blob upload successful!')
+    console.log('📊 Blob response details:', {
       url: blob.url,
       pathname: blob.pathname,
-      contentType: blob.contentType
+      contentType: blob.contentType,
+      urlLength: blob.url.length,
+      urlValid: blob.url.startsWith('https://'),
+      filename: filename
     })
 
-    return NextResponse.json({
+    // ✅ ENHANCED: Validate URL before returning
+    if (!blob.url || !blob.url.startsWith('https://')) {
+      console.error('❌ Invalid blob URL returned:', blob.url)
+      return NextResponse.json({ 
+        error: 'Invalid image URL generated',
+        debug: { blobUrl: blob.url }
+      }, { status: 500 })
+    }
+
+    const response = {
       success: true,
       url: blob.url,
       filename: filename,
@@ -80,8 +107,18 @@ export async function POST(request: NextRequest) {
       pathname: blob.pathname,
       contentType: blob.contentType,
       uploadedAt: new Date().toISOString(),
-      user: session.user.email
-    })
+      user: session.user.email,
+      // ✅ ADD: URL validation info
+      urlValidation: {
+        isValid: true,
+        length: blob.url.length,
+        startsWithHttps: blob.url.startsWith('https://'),
+        containsFilename: blob.url.includes(timestamp.toString())
+      }
+    }
+
+    console.log('📤 Returning response:', response)
+    return NextResponse.json(response)
 
   } catch (error) {
     console.error('💥 Upload error occurred:', error)
