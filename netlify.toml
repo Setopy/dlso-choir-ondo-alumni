@@ -1,8 +1,15 @@
 [build]
+  base = "dlso-choir-alumni"
   command = "npm run build"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[functions]
+  directory = ".netlify/functions"
