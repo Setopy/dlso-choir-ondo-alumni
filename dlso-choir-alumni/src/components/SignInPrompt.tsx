@@ -1,4 +1,4 @@
-// src/components/SignInPrompt.tsx
+// Create this as src/components/SignInPrompt.tsx
 'use client'
 
 import { signIn } from 'next-auth/react'
@@ -9,7 +9,7 @@ interface SignInPromptProps {
 }
 
 export default function SignInPrompt({ 
-  action = "continue", 
+  action = "share a memory", 
   onCancel 
 }: SignInPromptProps) {
   return (
@@ -27,7 +27,7 @@ export default function SignInPrompt({
           </h3>
           
           <p className="text-gray-600 mb-6">
-            Please sign in with your Google account to {action}. This helps us track contributions and build our community.
+            Please sign in with your Google account to {action}. This helps us track contributions and build our DLSO community.
           </p>
           
           <div className="space-y-3">

@@ -14,6 +14,7 @@
     "@cloudinary/url-gen": "^1.21.0",
     "@headlessui/react": "^2.2.7",
     "@sendgrid/mail": "^8.1.5",
+    "@vercel/blob": "^1.1.1",
     "cloudinary": "^2.7.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.12",
@@ -43,6 +44,3 @@
     "typescript": "^5"
   }
 }
-
-
-

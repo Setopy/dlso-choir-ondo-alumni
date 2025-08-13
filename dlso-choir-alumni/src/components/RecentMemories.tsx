@@ -35,14 +35,36 @@ export default function RecentMemories() {
   useEffect(() => {
     const fetchRecentMemories = async () => {
       try {
+        console.log('🔍 Fetching memories...') // Debug log
         const response = await fetch('/api/memories')
+        
         if (response.ok) {
           const data = await response.json()
-          // Show only the 6 most recent memories
-          setMemories(data.slice(0, 6))
+          console.log('📊 API Response:', data) // Debug log
+          
+          // ✅ EXTRACT MEMORIES ARRAY: Handle both array and {success, memories} response formats
+          let memoriesArray = []
+          if (Array.isArray(data)) {
+            memoriesArray = data
+          } else if (data.success && Array.isArray(data.memories)) {
+            memoriesArray = data.memories
+          } else {
+            console.error('❌ API returned unexpected format:', data)
+            setMemories([])
+            return
+          }
+          
+          console.log('📊 Memories found:', memoriesArray.length) // Debug log
+          setMemories(memoriesArray.slice(0, 6))
+        } else {
+          // Handle non-OK responses
+          const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+          console.error('❌ API Error:', response.status, errorData)
+          setMemories([])
         }
       } catch (error) {
-        console.error('Error fetching memories:', error)
+        console.error('❌ Fetch Error:', error)
+        setMemories([]) // Ensure memories is always an array
       } finally {
         setLoading(false)
       }
