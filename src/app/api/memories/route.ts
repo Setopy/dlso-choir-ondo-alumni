@@ -1,29 +1,79 @@
-// src/app/api/memories/route.ts - ENHANCED VERSION
+// src/app/api/memories/route.ts - ENHANCED FOR NETLIFY
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { connectToDatabase } from '@/lib/mongodb'
 
+// ✅ ENHANCED: Circuit breaker for MongoDB connections
+let connectionFailures = 0
+let lastFailureTime = 0
+const MAX_FAILURES = 5
+const FAILURE_RESET_TIME = 60000 // 1 minute
+
+function isCircuitBreakerOpen(): boolean {
+  if (connectionFailures >= MAX_FAILURES) {
+    if (Date.now() - lastFailureTime < FAILURE_RESET_TIME) {
+      return true
+    } else {
+      // Reset circuit breaker
+      connectionFailures = 0
+      lastFailureTime = 0
+    }
+  }
+  return false
+}
+
+function recordConnectionFailure(): void {
+  connectionFailures++
+  lastFailureTime = Date.now()
+}
+
+function recordConnectionSuccess(): void {
+  connectionFailures = 0
+  lastFailureTime = 0
+}
+
 // GET memories - NO AUTH REQUIRED (everyone can view)
 export async function GET(request: NextRequest) {
   try {
+    // Check circuit breaker
+    if (isCircuitBreakerOpen()) {
+      console.log('🔒 Circuit breaker open - rejecting request')
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'Database temporarily unavailable',
+          memories: [],
+          circuitBreakerOpen: true
+        }, 
+        { status: 503 }
+      )
+    }
+
     const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '20')
     const page = parseInt(searchParams.get('page') || '1')
     const skip = (page - 1) * limit
 
+    console.log('🔍 Fetching memories from MongoDB...')
     const { db } = await connectToDatabase()
+    recordConnectionSuccess()
 
-    // Get memories with proper error handling
-    const memories = await db.collection('memories')
-      .find({ isPublic: true })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .toArray()
+    // Get memories with proper error handling and timeout
+    const memories = await Promise.race([
+      db.collection('memories')
+        .find({ isPublic: true })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .toArray(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Query timeout')), 10000)
+      )
+    ])
 
     // Ensure consistent array format with proper serialization
-    const serializedMemories = memories.map(memory => ({
+    const serializedMemories = Array.isArray(memories) ? memories.map(memory => ({
       ...memory,
       _id: memory._id.toString(),
       likes: memory.likes || 0,
@@ -33,7 +83,17 @@ export async function GET(request: NextRequest) {
       authorImage: memory.authorImage || null,
       imageUrl: memory.imageUrl || null,
       createdAt: memory.createdAt ? memory.createdAt.toISOString() : new Date().toISOString()
-    }))
+    })) : []
+
+    // Get total count for pagination
+    const total = await Promise.race([
+      db.collection('memories').countDocuments({ isPublic: true }),
+      new Promise<number>((_, reject) => 
+        setTimeout(() => reject(new Error('Count timeout')), 5000)
+      )
+    ]).catch(() => serializedMemories.length)
+
+    console.log(`✅ Successfully fetched ${serializedMemories.length} memories`)
 
     return NextResponse.json({
       success: true,
@@ -41,19 +101,23 @@ export async function GET(request: NextRequest) {
       pagination: {
         page,
         limit,
-        total: await db.collection('memories').countDocuments({ isPublic: true })
+        total: typeof total === 'number' ? total : serializedMemories.length
       }
     })
 
   } catch (error) {
     console.error('❌ Error fetching memories:', error)
+    recordConnectionFailure()
+    
+    // Return graceful fallback
     return NextResponse.json(
       { 
         success: false,
-        error: 'Failed to fetch memories',
-        memories: [] // Always return empty array on error
+        error: 'Failed to fetch memories - database connection issue',
+        memories: [], // Always return empty array on error
+        retryAfter: Math.ceil(connectionFailures * 10) // Suggest retry time
       }, 
-      { status: 500 }
+      { status: 503 } // Service Unavailable
     )
   }
 }
@@ -61,7 +125,20 @@ export async function GET(request: NextRequest) {
 // POST memory - REQUIRES AUTH (only signed-in users can post)
 export async function POST(request: NextRequest) {
   try {
-    // Check if user is signed in (but don't block the endpoint)
+    // Check circuit breaker
+    if (isCircuitBreakerOpen()) {
+      console.log('🔒 Circuit breaker open - rejecting POST request')
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'Database temporarily unavailable - please try again later',
+          circuitBreakerOpen: true
+        }, 
+        { status: 503 }
+      )
+    }
+
+    // Check if user is signed in
     const session = await getServerSession(authOptions)
     
     if (!session?.user) {
@@ -78,7 +155,7 @@ export async function POST(request: NextRequest) {
     let body
     try {
       body = await request.json()
-    } catch {
+    } catch (parseError) {
       return NextResponse.json(
         { 
           success: false,
@@ -121,7 +198,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    console.log('💾 Saving memory to MongoDB...')
     const { db } = await connectToDatabase()
+    recordConnectionSuccess()
 
     // Create memory with enhanced structure
     const memory = {
@@ -150,29 +229,36 @@ export async function POST(request: NextRequest) {
       viewCount: 0
     }
 
-    const result = await db.collection('memories').insertOne(memory)
+    const result = await Promise.race([
+      db.collection('memories').insertOne(memory),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Insert timeout')), 15000)
+      )
+    ])
 
     console.log(`✅ Memory created by: ${session.user.name} (${session.user.email})`)
 
     return NextResponse.json({
       success: true,
       message: 'Memory shared successfully!',
-      memoryId: result.insertedId.toString(),
+      memoryId: (result as any).insertedId.toString(),
       memory: {
         ...memory,
-        _id: result.insertedId.toString(),
+        _id: (result as any).insertedId.toString(),
         createdAt: memory.createdAt.toISOString()
       }
     }, { status: 201 })
 
   } catch (error) {
     console.error('❌ Error creating memory:', error)
+    recordConnectionFailure()
+    
     return NextResponse.json(
       { 
         success: false,
-        error: 'Failed to create memory. Please try again.' 
+        error: 'Failed to create memory - database connection issue. Please try again.' 
       }, 
-      { status: 500 }
+      { status: 503 }
     )
   }
 }
