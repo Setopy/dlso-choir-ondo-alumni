@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ErrorBoundary } from './ErrorBoundary'
+import { validateMemoryArray, sanitizeMemoryData } from '@/lib/validation'
 
 interface Comment {
   id: string
@@ -27,14 +29,16 @@ interface Memory {
   createdAt: string
 }
 
-export default function RecentMemories() {
+function RecentMemoriesComponent() {
   const [memories, setMemories] = useState<Memory[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [imageLoadErrors, setImageLoadErrors] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     const fetchRecentMemories = async () => {
       try {
+        setError(null)
         console.log('🔍 Fetching memories...') // Debug log
         const response = await fetch('/api/memories')
         
@@ -42,28 +46,42 @@ export default function RecentMemories() {
           const data = await response.json()
           console.log('📊 API Response:', data) // Debug log
           
-          // ✅ EXTRACT MEMORIES ARRAY: Handle both array and {success, memories} response formats
-          let memoriesArray = []
+          // ✅ EXTRACT AND VALIDATE MEMORIES ARRAY
+          let memoriesArray: unknown[] = []
           if (Array.isArray(data)) {
             memoriesArray = data
           } else if (data.success && Array.isArray(data.memories)) {
             memoriesArray = data.memories
+          } else if (data.memories) {
+            // Fallback for different response formats
+            memoriesArray = Array.isArray(data.memories) ? data.memories : []
           } else {
             console.error('❌ API returned unexpected format:', data)
+            setError('Unable to load memories - unexpected data format')
             setMemories([])
             return
           }
           
+          // Validate and sanitize the memories array
+          if (!validateMemoryArray(memoriesArray)) {
+            console.warn('⚠️ Invalid memories data, attempting to sanitize...')
+            memoriesArray = memoriesArray
+              .filter((item: unknown) => item && typeof item === 'object')
+              .map((item: unknown) => sanitizeMemoryData(item as Record<string, unknown>))
+          }
+          
           console.log('📊 Memories found:', memoriesArray.length) // Debug log
-          setMemories(memoriesArray.slice(0, 6))
+          setMemories((memoriesArray as Memory[]).slice(0, 6))
         } else {
           // Handle non-OK responses
           const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
           console.error('❌ API Error:', response.status, errorData)
+          setError(errorData.error || `Server error: ${response.status}`)
           setMemories([])
         }
       } catch (error) {
         console.error('❌ Fetch Error:', error)
+        setError('Failed to load memories. Please check your connection and try again.')
         setMemories([]) // Ensure memories is always an array
       } finally {
         setLoading(false)
@@ -78,11 +96,18 @@ export default function RecentMemories() {
   }
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    })
+    try {
+      const date = new Date(dateString)
+      if (isNaN(date.getTime())) {
+        return 'Recent'
+      }
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      })
+    } catch {
+      return 'Recent'
+    }
   }
 
   if (loading) {
@@ -103,6 +128,29 @@ export default function RecentMemories() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-purple-50/20 to-amber-50/30"></div>
+        <div className="relative container mx-auto px-6 py-16">
+          <div className="text-center">
+            <span className="text-6xl mb-4 block">⚠️</span>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-6">Unable to Load Memories</h2>
+            <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+              {error}
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-8 py-3 rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+            >
+              Try Again
+            </button>
           </div>
         </div>
       </section>
@@ -154,7 +202,7 @@ export default function RecentMemories() {
                 {memory.imageUrl && !imageLoadErrors.has(memory._id) ? (
                   <Image
                     src={memory.imageUrl}
-                    alt={memory.title}
+                    alt={memory.title || 'Memory photo'}
                     fill
                     className="object-cover object-top group-hover:scale-105 transition-transform duration-300"
                     onError={() => handleImageError(memory._id)}
@@ -190,11 +238,11 @@ export default function RecentMemories() {
 
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-slate-800 mb-2 line-clamp-2">
-                  {memory.title}
+                  {memory.title || 'Untitled Memory'}
                 </h3>
                 
                 <p className="text-slate-600 text-sm mb-3 line-clamp-2">
-                  {memory.description}
+                  {memory.description || 'No description available'}
                 </p>
 
                 <div className="flex items-center justify-between text-sm">
@@ -216,6 +264,11 @@ export default function RecentMemories() {
                         width={24}
                         height={24}
                         className="rounded-full object-cover"
+                        onError={(e) => {
+                          // Hide broken author images
+                          const target = e.target as HTMLImageElement
+                          target.style.display = 'none'
+                        }}
                       />
                     )}
                     <div className="text-right">
@@ -261,5 +314,14 @@ export default function RecentMemories() {
         </div>
       </div>
     </section>
+  )
+}
+
+// Export wrapped component with error boundary
+export default function RecentMemories() {
+  return (
+    <ErrorBoundary>
+      <RecentMemoriesComponent />
+    </ErrorBoundary>
   )
 }

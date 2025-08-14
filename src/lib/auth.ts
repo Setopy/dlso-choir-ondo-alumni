@@ -1,4 +1,4 @@
-// src/lib/auth.ts
+// src/lib/auth.ts - Enhanced for Netlify deployment
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
@@ -62,6 +62,7 @@ export const authOptions: NextAuthOptions = {
       return token
     },
     async redirect({ url, baseUrl }) {
+      // Enhanced redirect handling for Netlify
       if (url.startsWith("/")) return `${baseUrl}${url}`
       else if (new URL(url).origin === baseUrl) return url
       return baseUrl
@@ -69,8 +70,8 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'database',
-    maxAge: 30 * 24 * 60 * 60,
-    updateAge: 24 * 60 * 60,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
   pages: {
     signIn: '/auth/signin',
@@ -78,12 +79,46 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     async signIn({ user }) {
-      console.log('User signed in:', user.email)
+      console.log('✅ User signed in:', user.email)
     },
     async signOut() {
-      console.log('User signed out')
+      console.log('✅ User signed out')
+    }
+  },
+  // Enhanced configuration for serverless deployment
+  useSecureCookies: process.env.NODE_ENV === 'production',
+  cookies: {
+    sessionToken: {
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.your-domain.com' : undefined
+      }
+    },
+    callbackUrl: {
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.callback-url`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production'
+      }
+    },
+    csrfToken: {
+      name: `${process.env.NODE_ENV === 'production' ? '__Host-' : ''}next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production'
+      }
     }
   },
   debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET,
+  // Add URL configuration for better Netlify support
+  ...(process.env.NEXTAUTH_URL && { url: process.env.NEXTAUTH_URL }),
 }
