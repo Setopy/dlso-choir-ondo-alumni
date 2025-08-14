@@ -20,16 +20,16 @@ const nextConfig = {
         port: '',
         pathname: '**',
       },
-      // ✅ CRITICAL: Add Vercel Blob domains for production
+      // ✅ FIXED: Vercel Blob domains with proper wildcard syntax
       {
         protocol: 'https',
-        hostname: '**.public.blob.vercel-storage.com',
+        hostname: '*.public.blob.vercel-storage.com',
         port: '',
         pathname: '**',
       },
       {
         protocol: 'https',
-        hostname: '**.blob.vercel-storage.com',
+        hostname: '*.blob.vercel-storage.com',
         port: '',
         pathname: '**',
       },
@@ -37,6 +37,13 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'mzf1o6wyyat4t2gj.public.blob.vercel-storage.com',
+        port: '',
+        pathname: '**',
+      },
+      // ✅ ADD: Additional common Vercel Blob patterns
+      {
+        protocol: 'https',
+        hostname: 'blob.vercel-storage.com',
         port: '',
         pathname: '**',
       }
@@ -51,7 +58,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self' 'unsafe-eval' 'unsafe-inline' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com mzf1o6wyyat4t2gj.public.blob.vercel-storage.com; frame-src https:; connect-src 'self' https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com;"
+            value: "default-src 'self' 'unsafe-eval' 'unsafe-inline' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com mzf1o6wyyat4t2gj.public.blob.vercel-storage.com blob.vercel-storage.com; frame-src https:; connect-src 'self' https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com blob.vercel-storage.com;"
           }
         ],
       },

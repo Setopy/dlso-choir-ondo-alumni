@@ -71,6 +71,14 @@ function RecentMemoriesComponent() {
           }
           
           console.log('📊 Memories found:', memoriesArray.length) // Debug log
+          
+          // Debug image URLs
+          memoriesArray.forEach((memory: any, index: number) => {
+            if (memory.imageUrl) {
+              console.log(`🖼️ Memory ${index + 1} image URL:`, memory.imageUrl)
+            }
+          })
+          
           setMemories((memoriesArray as Memory[]).slice(0, 6))
         } else {
           // Handle non-OK responses
@@ -91,7 +99,8 @@ function RecentMemoriesComponent() {
     fetchRecentMemories()
   }, [])
 
-  const handleImageError = (memoryId: string) => {
+  const handleImageError = (memoryId: string, imageUrl?: string) => {
+    console.error('❌ Image failed to load:', { memoryId, imageUrl })
     setImageLoadErrors(prev => new Set(prev).add(memoryId))
   }
 
@@ -205,8 +214,9 @@ function RecentMemoriesComponent() {
                     alt={memory.title || 'Memory photo'}
                     fill
                     className="object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                    onError={() => handleImageError(memory._id)}
+                    onError={() => handleImageError(memory._id, memory.imageUrl)}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    unoptimized={memory.imageUrl?.includes('blob.vercel-storage.com')}
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full text-center text-gray-500">
@@ -215,6 +225,11 @@ function RecentMemoriesComponent() {
                       <p className="text-sm">
                         {memory.imageUrl ? 'Image unavailable' : 'No photo'}
                       </p>
+                      {process.env.NODE_ENV === 'development' && memory.imageUrl && (
+                        <p className="text-xs mt-2 break-all max-w-[200px] mx-auto">
+                          {memory.imageUrl}
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}
