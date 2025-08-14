@@ -20,7 +20,7 @@ const nextConfig = {
         port: '',
         pathname: '**',
       },
-      // ✅ FIXED: Vercel Blob domains with proper wildcard syntax
+      // ✅ COMPREHENSIVE: All Vercel Blob patterns
       {
         protocol: 'https',
         hostname: '*.public.blob.vercel-storage.com',
@@ -33,21 +33,30 @@ const nextConfig = {
         port: '',
         pathname: '**',
       },
-      // ✅ ADD: Your specific blob store
+      {
+        protocol: 'https',
+        hostname: 'blob.vercel-storage.com',
+        port: '',
+        pathname: '**',
+      },
+      // ✅ ADD: Your specific blob store with all patterns
       {
         protocol: 'https',
         hostname: 'mzf1o6wyyat4t2gj.public.blob.vercel-storage.com',
         port: '',
         pathname: '**',
       },
-      // ✅ ADD: Additional common Vercel Blob patterns
       {
         protocol: 'https',
-        hostname: 'blob.vercel-storage.com',
+        hostname: 'mzf1o6wyyat4t2gj.blob.vercel-storage.com',
         port: '',
         pathname: '**',
       }
     ],
+    // ✅ ADD: Additional configuration for better compatibility
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
   // ✅ ENHANCED: CSP with explicit Vercel Blob support
@@ -58,7 +67,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self' 'unsafe-eval' 'unsafe-inline' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com mzf1o6wyyat4t2gj.public.blob.vercel-storage.com blob.vercel-storage.com; frame-src https:; connect-src 'self' https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com blob.vercel-storage.com;"
+            value: "default-src 'self' 'unsafe-eval' 'unsafe-inline' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com mzf1o6wyyat4t2gj.public.blob.vercel-storage.com mzf1o6wyyat4t2gj.blob.vercel-storage.com blob.vercel-storage.com; frame-src https:; connect-src 'self' https: *.blob.vercel-storage.com *.public.blob.vercel-storage.com blob.vercel-storage.com;"
           }
         ],
       },

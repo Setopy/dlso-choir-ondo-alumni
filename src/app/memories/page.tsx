@@ -40,13 +40,27 @@ export default function MemoryWallPage() {
       const response = await fetch('/api/memories')
       if (response.ok) {
         const data = await response.json()
-        setMemories(data)
+        
+        // ✅ FIXED: Handle new API response format
+        let memoriesArray: Memory[] = []
+        if (Array.isArray(data)) {
+          memoriesArray = data
+        } else if (data.success && Array.isArray(data.memories)) {
+          memoriesArray = data.memories
+        } else if (data.memories && Array.isArray(data.memories)) {
+          memoriesArray = data.memories
+        } else {
+          console.error('❌ Unexpected API response format for memories page:', data)
+          memoriesArray = []
+        }
+        
+        setMemories(memoriesArray)
       } else {
         setError('Failed to load memories')
       }
     } catch (err) {
       setError('Error loading memories')
-      console.error('Error:', err)
+      console.error('❌ Error loading memories:', err)
     } finally {
       setLoading(false)
     }
@@ -57,193 +71,206 @@ export default function MemoryWallPage() {
   }
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
+    try {
+      const date = new Date(dateString)
+      if (isNaN(date.getTime())) {
+        return 'Recent'
+      }
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    } catch {
+      return 'Recent'
+    }
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-blue-50 to-amber-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-amber-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading memories...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/20 to-amber-50/30">
+        <div className="container mx-auto px-6 py-16">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-6">
+              Memory Wall
+            </h1>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Loading cherished moments from our DLSO family...
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden animate-pulse border border-slate-200/50">
+                <div className="aspect-[4/3] bg-gray-200"></div>
+                <div className="p-6">
+                  <div className="h-6 bg-gray-200 rounded mb-3"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/20 to-amber-50/30 flex items-center justify-center">
+        <div className="text-center p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200/50 max-w-md mx-4">
+          <span className="text-6xl mb-4 block">⚠️</span>
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">Unable to Load Memories</h2>
+          <p className="text-slate-600 mb-6">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-6 py-3 rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 font-semibold"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (memories.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/20 to-amber-50/30">
+        <div className="container mx-auto px-6 py-16">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-6">
+              Memory Wall
+            </h1>
+            <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+              No memories have been shared yet. Be the first to add a cherished moment from our DLSO journey!
+            </p>
+            <Link 
+              href="/memories/new"
+              className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-8 py-4 rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 font-semibold text-lg inline-block shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+            >
+              Share Your First Memory
+            </Link>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-blue-50 to-amber-50">
-      <header className="bg-white shadow-sm border-b-2 border-amber-200">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="w-12 h-12 bg-gradient-to-br from-amber-500 to-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">✨</span>
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">Memory Wall</h1>
-                <p className="text-gray-600">Cherished moments from our DLSO family</p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <Link 
-                href="/memories/new" 
-                className="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700 transition-colors font-semibold"
-              >
-                + Share Memory
-              </Link>
-              <Link href="/" className="text-gray-600 hover:text-gray-800">
-                ← Back to Home
-              </Link>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/20 to-amber-50/30">
+      <div className="container mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-6">
+            Memory Wall
+          </h1>
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+            Explore the beautiful collection of memories, experiences, and moments that define our DLSO Ondo Alumni community.
+          </p>
+          <Link 
+            href="/memories/new"
+            className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 font-semibold text-lg inline-block shadow-xl hover:shadow-2xl transform hover:-translate-y-1 mb-12"
+          >
+            + Add New Memory
+          </Link>
         </div>
-      </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
-            <p className="text-red-600">{error}</p>
-          </div>
-        )}
-
-        {memories.length === 0 && !loading && !error ? (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl">📸</span>
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">No memories shared yet</h2>
-            <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              Be the first to share a special moment from our DLSO family! 
-              Your memories help preserve our ministry and spiritual legacy.
-            </p>
-            <Link 
-              href="/memories/new"
-              className="bg-amber-600 text-white px-8 py-3 rounded-lg hover:bg-amber-700 transition-colors font-semibold"
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {memories.map((memory) => (
+            <div 
+              key={memory._id}
+              className="group bg-white/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-slate-200/50"
             >
-              Share Your First Memory
-            </Link>
-          </div>
-        ) : (
-          <div>
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-800">
-                Our DLSO Memories ({memories.length})
-              </h2>
-              <div className="text-sm text-gray-500">
-                Latest memories first
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {memories.map((memory) => (
-                <div 
-                  key={memory._id} 
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-                >
-                  <div className="relative aspect-[5/4] bg-gradient-to-br from-amber-100 to-blue-100">
-                    {memory.imageUrl && !imageLoadErrors.has(memory._id) ? (
-                      <Image
-                        src={memory.imageUrl}
-                        alt={memory.title}
-                        fill
-                        className="object-cover object-top"
-                        onError={() => handleImageError(memory._id)}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        priority={false}
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-center text-gray-500">
-                        <div>
-                          <span className="text-4xl mb-2 block">📸</span>
-                          <p className="text-sm">
-                            {memory.imageUrl ? 'Image unavailable' : 'No photo'}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {memory.occasion && (
-                      <div className="absolute top-2 right-2">
-                        <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
-                          {memory.occasion}
-                        </span>
-                      </div>
-                    )}
+              <div className="relative aspect-[4/3] bg-gradient-to-br from-amber-100 to-blue-100">
+                {memory.imageUrl && !imageLoadErrors.has(memory._id) ? (
+                  <Image
+                    src={memory.imageUrl}
+                    alt={memory.title || 'Memory photo'}
+                    fill
+                    className="object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                    onError={() => handleImageError(memory._id)}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    unoptimized={memory.imageUrl?.includes('blob.vercel-storage.com')}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-center text-gray-500">
+                    <div>
+                      <span className="text-4xl mb-2 block">📸</span>
+                      <p className="text-sm">
+                        {memory.imageUrl ? 'Image unavailable' : 'No photo'}
+                      </p>
+                    </div>
                   </div>
+                )}
+                
+                {memory.occasion && (
+                  <div className="absolute top-3 right-3">
+                    <span className="bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-xs font-medium">
+                      {memory.occasion}
+                    </span>
+                  </div>
+                )}
 
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="text-xl font-semibold text-gray-800 line-clamp-2 flex-1">
-                        {memory.title}
-                      </h3>
-                      {memory.year && (
-                        <div className="text-right ml-4">
-                          <span className="text-sm font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded">
-                            {memory.year}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                {memory.year && (
+                  <div className="absolute top-3 left-3">
+                    <span className="bg-amber-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                      {memory.year}
+                    </span>
+                  </div>
+                )}
+              </div>
 
-                    <p className="text-gray-600 mb-4 line-clamp-3">
-                      {memory.description}
-                    </p>
+              <div className="p-6">
+                <h2 className="text-xl font-bold text-slate-800 mb-3 line-clamp-2">
+                  {memory.title || 'Untitled Memory'}
+                </h2>
+                
+                <p className="text-slate-600 mb-4 line-clamp-3">
+                  {memory.description || 'No description available'}
+                </p>
 
-                    <div className="flex items-center justify-between text-sm text-gray-500 border-t pt-4">
-                      <div className="flex items-center space-x-4">
-                        <button className="flex items-center space-x-1 hover:text-red-500 transition-colors">
-                          <span>❤️</span>
-                          <span>{memory.likes}</span>
-                        </button>
-                        <span className="flex items-center space-x-1">
-                          <span>💬</span>
-                          <span>{memory.comments?.length || 0}</span>
-                        </span>
-                        {memory.imageUrl && (
-                          <span className="flex items-center space-x-1 text-green-600">
-                            <span>📸</span>
-                            <span className="text-xs">Photo</span>
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">{memory.authorName}</p>
-                        <p className="text-xs">{formatDate(memory.createdAt)}</p>
-                      </div>
-                    </div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-4 text-sm text-slate-500">
+                    <span className="flex items-center space-x-1">
+                      <span>❤️</span>
+                      <span>{memory.likes || 0}</span>
+                    </span>
+                    <span className="flex items-center space-x-1">
+                      <span>💬</span>
+                      <span>{memory.comments?.length || 0}</span>
+                    </span>
                   </div>
                 </div>
-              ))}
+
+                <div className="border-t border-slate-200 pt-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-slate-800 text-sm">
+                      {memory.authorName || 'Anonymous'}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {formatDate(memory.createdAt)}
+                    </p>
+                  </div>
+                  <button className="text-purple-600 hover:text-purple-700 font-medium text-sm transition-colors">
+                    View Details →
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          ))}
+        </div>
 
         {memories.length > 0 && (
-          <div className="mt-16 text-center">
-            <div className="bg-gradient-to-r from-amber-50 to-blue-50 rounded-xl p-8">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-                Share Your DLSO Memories! ✨
-              </h3>
-              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                Help us build the most complete collection of Ondo DLSO Alumni memories. 
-                Every photo and story adds to our shared legacy.
-              </p>
-              <Link 
-                href="/memories/new"
-                className="bg-amber-600 text-white px-8 py-3 rounded-lg hover:bg-amber-700 transition-colors font-semibold inline-block"
-              >
-                Add Your Memory
-              </Link>
+          <div className="text-center mt-16">
+            <p className="text-slate-600 mb-4">
+              Showing {memories.length} precious memories from our DLSO family
+            </p>
+            <div className="text-sm text-slate-500">
+              Want to contribute? <Link href="/memories/new" className="text-purple-600 hover:text-purple-700 font-medium">Share your story</Link>
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   )
 }

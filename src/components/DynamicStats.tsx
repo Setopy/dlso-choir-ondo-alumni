@@ -34,14 +34,31 @@ export default function DynamicStats() {
         // Fetch memories to calculate stats
         const memoriesResponse = await fetch('/api/memories')
         if (memoriesResponse.ok) {
-          const memories: Memory[] = await memoriesResponse.json()
+          const data = await memoriesResponse.json()
+          
+          // ✅ HANDLE NEW API RESPONSE FORMAT: Extract memories array
+          let memories: Memory[] = []
+          if (Array.isArray(data)) {
+            memories = data
+          } else if (data.success && Array.isArray(data.memories)) {
+            memories = data.memories
+          } else if (data.memories && Array.isArray(data.memories)) {
+            memories = data.memories
+          } else {
+            console.error('❌ Unexpected API response format for stats:', data)
+            memories = []
+          }
           
           // Calculate stats from real data
           const totalMemories = memories.length
           const totalLikes = memories.reduce((sum: number, memory: Memory) => sum + (memory.likes || 0), 0)
           
           // Get unique users
-          const uniqueUsers = new Set(memories.map((memory: Memory) => memory.authorEmail || memory.authorId))
+          const uniqueUsers = new Set(
+            memories
+              .map((memory: Memory) => memory.authorEmail || memory.authorId)
+              .filter(Boolean) // Remove null/undefined values
+          )
           const totalUsers = uniqueUsers.size
           
           // Calculate years active (from 2005 when DLSO Ondo Region started)
@@ -54,9 +71,11 @@ export default function DynamicStats() {
             yearsActive,
             totalLikes
           })
+        } else {
+          console.error('❌ Failed to fetch memories for stats:', memoriesResponse.status)
         }
       } catch (error) {
-        console.error('Error fetching stats:', error)
+        console.error('❌ Error fetching stats:', error)
       } finally {
         setLoading(false)
       }

@@ -39,12 +39,10 @@ function RecentMemoriesComponent() {
     const fetchRecentMemories = async () => {
       try {
         setError(null)
-        console.log('🔍 Fetching memories...') // Debug log
         const response = await fetch('/api/memories')
         
         if (response.ok) {
           const data = await response.json()
-          console.log('📊 API Response:', data) // Debug log
           
           // ✅ EXTRACT AND VALIDATE MEMORIES ARRAY
           let memoriesArray: unknown[] = []
@@ -70,12 +68,13 @@ function RecentMemoriesComponent() {
               .map((item: unknown) => sanitizeMemoryData(item as Record<string, unknown>))
           }
           
-          console.log('📊 Memories found:', memoriesArray.length) // Debug log
+          console.log(`📊 Memories found: ${memoriesArray.length}`)
           
           // Debug image URLs
-          memoriesArray.forEach((memory: any, index: number) => {
-            if (memory.imageUrl) {
-              console.log(`🖼️ Memory ${index + 1} image URL:`, memory.imageUrl)
+          memoriesArray.forEach((memory: unknown, index: number) => {
+            const memoryObj = memory as Record<string, unknown>
+            if (memoryObj.imageUrl) {
+              console.log(`🖼️ Memory ${index + 1} image URL:`, memoryObj.imageUrl)
             }
           })
           
